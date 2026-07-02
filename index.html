@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Chonita Pibil - Estilo Yucateco</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #0a0a0a;
+      color: #fff;
+      margin: 0;
+    }
+
+    /* Barra fija con degradado */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* Negro dominante, dorado solo como acento en la esquina */
+  background: linear-gradient(115deg, #000000 0%, #000000 55%, #1a1508 75%, #a67c1e 100%);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  z-index: 1000;
+}
+
+
+
+
+
+    .logo {
+      height: 60px;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      transition: opacity 0.3s ease;
+      
+    }
+
+
+    .navbar a:hover {
+      opacity: 0.7;
+    }
+
+    /* Hero */
+    .hero {
+      background: url('cochinita.jpg') center/cover no-repeat;
+      text-align: center;
+      padding: 8rem 2rem 6rem; /* más espacio arriba para la barra fija */
+      color: #d4af37;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero h2 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+      color: #ffb347;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      background-color: #d4af37;
+      color: #000;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #ff8c00;
+    }
+
+    /* Menú */
+    .menu {
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .menu h2 {
+      font-family: 'Playfair Display', serif;
+      color: #d4af37;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background-color: #111;
+      border: 1px solid #d4af37;
+      padding: 1rem;
+      text-align: center;
+      border-radius: 8px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+    }
+
+    .card h3 {
+      font-family: 'Playfair Display', serif;
+      color: #d4af37;
+    }
+
+    .card p {
+      color: #ccc;
+    }
+
+    .card span {
+      color: #ffb347;
+      font-weight: bold;
+    }
+
+    /* Historia */
+    .historia {
+      background-color: #111;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .historia h2 {
+      font-family: 'Playfair Display', serif;
+      color: #d4af37;
+      font-size: 2.5rem;
+    }
+
+    /* Contacto */
+    .contacto {
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .contacto h2 {
+      font-family: 'Playfair Display', serif;
+      color: #d4af37;
+      font-size: 2.5rem;
+    }
+
+    .whatsapp {
+      background-color: #25D366;
+      color: #fff;
+      border-radius: 5px;
+    }
+
+    footer {
+      background-color: #000;
+      text-align: center;
+      padding: 1rem;
+      color: #888;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <img src="logo.png" alt="Mi Chonita Pibil" class="logo">
+    <nav>
+      <ul>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#menu">Menú</a></li>
+        <li><a href="#historia">Historia</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="inicio" class="hero">
+    <h1>Mi Chonita Pibil</h1>
+    <h2>Estilo Yucateco</h2>
+    <button class="btn">Ver Menú</button>
+  </section>
+
+  <section id="menu" class="menu">
+    <h2>Nuestro Menú</h2>
+    <div class="menu-grid">
+      <div class="card">
+        <img src="tacos.jpg" alt="Tacos de Cochinita" width="100%">
+        <h3>Tacos de Cochinita</h3>
+        <p>Con cebolla morada y salsa habanera.</p>
+        <span>$30.00</span>
+      </div>
+      <div class="card">
+        <img src="torta.jpg" alt="Torta de Cochinita" width="100%">
+        <h3>Torta de Cochinita</h3>
+        <p>Pan artesanal con carne pibil y adobo.</p>
+        <span>$45.00</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="historia" class="historia">
+    <h2>Tradición Yucateca</h2>
+    <p>Conoce el origen de la cochinita pibil y nuestra pasión por los sabores auténticos.</p>
+    <button class="btn">Leer Historia</button>
+  </section>
+
+  <section id="contacto" class="contacto">
+    <h2>Haz tu pedido</h2>
+    <p>Ordena fácilmente por WhatsApp.</p>
+    <a href="https://wa.me/5555555555" class="btn whatsapp">Pedir por WhatsApp</a>
+  </section>
+
+  <footer>
+    <p>© 2026 Mi Chonita Pibil. Todos los derechos reservados.</p>
+  </footer>
+</body>
+</html>
+
