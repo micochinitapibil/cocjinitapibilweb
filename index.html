@@ -60,12 +60,50 @@
     }
 
     /* Hero */
-    .hero {
-      background: url('cochinita.jpg') center/cover no-repeat;
-      text-align: center;
-      padding: 8rem 2rem 6rem; /* más espacio arriba para la barra fija */
-      color: #d4af37;
-    }
+ .hero {
+  position: relative;
+  background: url('principal.png') center/cover no-repeat;
+  text-align: center;
+  height: 50vh; /* ocupa toda la pantalla */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #d4af37;
+  margin-top: 90px;
+}
+
+/* Overlay elegante y suave */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.50); /* oscurece ligeramente */
+  backdrop-filter: blur(2px);      /* blur suave */
+  -webkit-backdrop-filter: blur(2);
+  z-index: 0;
+}
+
+/* Texto y botón encima del overlay */
+.hero h1,
+.hero h2,
+.hero .btn {
+  position: relative;
+  z-index: 1;
+}
+
+
+
+
+/* Asegura que el texto quede encima */
+.hero h1,
+.hero h2,
+.hero .btn {
+  position: relative;
+  z-index: 1;
+}
+
+
 
     .hero h1 {
       font-family: 'Playfair Display', serif;
@@ -249,11 +287,12 @@
     </nav>
   </header>
 
-  <section id="inicio" class="hero">
-    <h1>Mi Chonita Pibil</h1>
-    <h2>Estilo Yucateco</h2>
-    <button class="btn">Ver Menú</button>
-  </section>
+ <section id="inicio" class="hero">
+  <h1>Mi Chonita Pibil</h1>
+  <h2>Estilo Yucateco</h2>
+  <button class="btn">Ver Menú</button>
+</section>
+
 
   <section id="menu" class="menu">
     <h2>Nuestro Menú</h2>
