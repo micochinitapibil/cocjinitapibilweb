@@ -179,6 +179,61 @@
       color: #888;
       font-size: 0.9rem;
     }
+    .ordenar {
+  text-align: center;   /* Centra todo el contenido */
+  padding: 3rem 2rem;
+}
+
+.ordenar h2 {
+  font-family: 'Playfair Display', serif;
+  color: #d4af37;
+  font-size: 2.5rem;
+}
+
+.ordenar p {
+  color: #ccc;
+  margin-bottom: 1rem;
+}
+
+.ordenar .btn {
+  display: inline-block; /* Hace que el botón se centre */
+  margin: 0 auto;
+}
+
+
+
+
+    @media (max-width: 768px) {
+  .navbar {
+    padding: 0.5rem 1rem; /* menos espacio en móvil */
+  }
+
+  .navbar a {
+    font-size: 0.9rem; /* texto más pequeño */
+  }
+
+  .hero h1 {
+    font-size: 2rem; /* título más compacto */
+  }
+
+  .hero h2 {
+    font-size: 1.2rem; /* subtítulo más compacto */
+  }
+
+  .menu h2, .ordenar h2 {
+    font-size: 2rem;
+  }
+
+  .card p {
+    font-size: 0.9rem; /* descripción más ajustada */
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem; /* botones más cómodos en móvil */
+  }
+}
+
   </style>
 </head>
 <body>
@@ -189,7 +244,7 @@
         <li><a href="#inicio">Inicio</a></li>
         <li><a href="#menu">Menú</a></li>
         <li><a href="#historia">Historia</a></li>
-        <li><a href="#contacto">Contacto</a></li>
+        <li><a href="#ordenar">ordenar</a></li>
       </ul>
     </nav>
   </header>
@@ -224,11 +279,12 @@
     <button class="btn">Leer Historia</button>
   </section>
 
-  <section id="contacto" class="contacto">
-    <h2>Haz tu pedido</h2>
-    <p>Ordena fácilmente por WhatsApp.</p>
-    <a href="https://wa.me/5555555555" class="btn whatsapp">Pedir por WhatsApp</a>
-  </section>
+<section id="ordenar" class="ordenar">
+  <h2>Ordenar</h2>
+  <p>Haz tu pedido fácilmente por WhatsApp.</p>
+  <a href="https://wa.me/5555555555" class="btn whatsapp">Ordenar por WhatsApp</a>
+</section>
+
 
   <footer>
     <p>© 2026 Mi Chonita Pibil. Todos los derechos reservados.</p>
