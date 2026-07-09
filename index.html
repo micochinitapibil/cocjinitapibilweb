@@ -175,8 +175,17 @@
       padding: 1rem;
       text-align: center;
       border-radius: 8px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+        opacity: 1;
+  max-height: 1000px; /* suficiente para cualquier card */
+  overflow: hidden;
+  transition: all 0.6s ease; /* animación suave */
     }
+    .card.hidden {
+  opacity: 0;
+  max-height: 0;
+  margin: 0;
+  padding: 0;
+}
 
     .card:hover {
       transform: translateY(-5px);
@@ -197,18 +206,58 @@
       font-weight: bold;
     }
 
-    /* Historia */
-    .historia {
-      background-color: #111;
-      text-align: center;
-      padding: 3rem 2rem;
-    }
+   /* Ubicación */
+.ubicacion {
+  background-color: #111; /* negro elegante */
+  text-align: center;
+  padding: 3rem 2rem;
+}
 
-    .historia h2 {
-      font-family: 'Playfair Display', serif;
-      color: #d4af37;
-      font-size: 2.5rem;
-    }
+.ubicacion h2 {
+  font-family: 'Playfair Display', serif;
+  color: #d4af37; /* dorado */
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.ubicacion p {
+  color: #fff;
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+}
+
+.ubicacion iframe {
+  border: 2px solid #d4af37; /* marco dorado */
+  border-radius: 8px;
+  max-width: 100%;
+}
+
+/* Segunda Ubicación */
+#ubicacion2 {
+  background-color: #111; /* negro elegante */
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+#ubicacion2 h2 {
+  font-family: 'Playfair Display', serif;
+  color: #d4af37; /* dorado */
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+#ubicacion2 p {
+  color: #fff;
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+}
+
+#ubicacion2 iframe {
+  border: 2px solid #d4af37; /* marco dorado */
+  border-radius: 8px;
+  max-width: 100%;
+}
+
 
     /* Contacto */
     .contacto {
@@ -321,7 +370,7 @@
       <ul>
         <li><a href="#inicio">Inicio</a></li>
         <li><a href="#menu">Menú</a></li>
-        <li><a href="#historia">Historia</a></li>
+        <li><a href="#ubicacion">Ubicacion</a></li>
         <li><a href="#ordenar">ordenar</a></li>
       </ul>
     </nav>
@@ -688,16 +737,30 @@
 </section>
 
 
-  <section id="historia" class="historia">
-    <h2>Tradición Yucateca</h2>
-    <p>Conoce el origen de la cochinita pibil y nuestra pasión por los sabores auténticos.</p>
-    <button class="btn">Leer Historia</button>
-  </section>
+ <section id="ubicacion" class="ubicacion">
+  <h2>Ubicación</h2>
+  <p>Encuéntranos fácilmente en nuestra sucursal:</p>
+  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3757.9910403206363!2d-99.03454832732675!3d19.62768080696003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f3402cf83275%3A0x834179b17cd2ed6c!2sEl%20Chino%2C%20Cochinita%20a%20la%20Pibil%20Suc.%20H%C3%A9roes!5e0!3m2!1ses!2smx!4v1783622914843!5m2!1ses!2smx" 
+          width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" 
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</section>
+
+
+<section id="ubicacion2" class="ubicacion">
+  <h2>También nos puedes encontrar en:</h2>
+  <p>Mercadito Gourmet — Ojo de Agua, Méx.</p>
+  <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3757.2871972630555!2d-99.019624!3d19.657749!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f30055a9fcdb%3A0x5122f231fde8cf41!2sMercadito%20Gourmet!5e0!3m2!1ses-419!2smx!4v1783623680683!5m2!1ses-419!2smx" 
+          width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" 
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</section>
+
 
 <section id="ordenar" class="ordenar">
   <h2>Ordenar</h2>
   <p>Haz tu pedido fácilmente por WhatsApp.</p>
-  <a href="https://wa.me/5555555555" class="btn whatsapp">Ordenar por WhatsApp</a>
+  <a href="https://wa.me/5215561438164" class="btn whatsapp" target="_blank">
+    Ordenar por WhatsApp
+  </a>
 </section>
 
 
@@ -706,19 +769,13 @@
   </footer>
 
   <script>
-
 document.querySelectorAll('.ver-mas').forEach(button => {
   button.addEventListener('click', () => {
     const section = button.previousElementSibling; // el div.menu-grid
-    const hiddenCards = section.querySelectorAll('.card.hidden');
-
-    // Si actualmente está en "Ver más", mostramos todas
     if (button.textContent.includes('más')) {
       section.querySelectorAll('.card').forEach(card => card.classList.remove('hidden'));
       button.textContent = 'Ver menos -';
-    } 
-    // Si está en "Ver menos", volvemos a ocultar a partir de la 4ª card
-    else {
+    } else {
       section.querySelectorAll('.card').forEach((card, index) => {
         if (index >= 3) card.classList.add('hidden');
       });
@@ -726,7 +783,6 @@ document.querySelectorAll('.ver-mas').forEach(button => {
     }
   });
 });
-
 
 
   </script>
