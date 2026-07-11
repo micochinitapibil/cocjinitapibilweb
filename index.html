@@ -7,32 +7,40 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@700&display=swap');
 
+    /* ── FIX 1: RESET que bloquea el doble scroll horizontal ── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      overflow-x: hidden;
+      max-width: 100vw;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #0a0a0a;
       color: #fff;
       margin: 0;
+      /* FIX 1b: igual que html, para que ningún hijo expanda la página */
+      overflow-x: hidden;
+      max-width: 100vw;
     }
 
-    /* Barra fija con degradado */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  /* Negro dominante, dorado solo como acento en la esquina */
-  background: linear-gradient(115deg, #000000 0%, #000000 55%, #1a1508 75%, #a67c1e 100%);
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  z-index: 1000;
-}
-
-
-
-
+    /* ── FIX 2: NAVBAR con left+right en lugar de width:100% ── */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;          /* ancla el borde derecho al viewport */
+      width: 100vw;      /* 100vw ignora el scrollbar y el padding del body */
+      background: linear-gradient(115deg, #000000 0%, #000000 55%, #1a1508 75%, #a67c1e 100%);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      z-index: 1000;
+    }
 
     .logo {
       height: 60px;
@@ -44,6 +52,7 @@
       gap: 1.5rem;
       margin: 0;
       padding: 0;
+      flex-wrap: wrap;   /* FIX: en móvil los links bajan de línea si no caben */
     }
 
     .navbar a {
@@ -51,21 +60,22 @@
       text-decoration: none;
       font-weight: 600;
       transition: opacity 0.3s ease;
-      
+      white-space: nowrap;
     }
-
 
     .navbar a:hover {
       opacity: 0.7;
     }
 
- .hero {
-  background: url('fondo.jpg') center center no-repeat;
-  background-size: contain; /* mantiene tamaño original */
-  width: 100%;
-  height: 500px; /* igual a la altura de la imagen */
-  background-color: #000; /* relleno negro si sobra espacio */
-}
+    /* FIX 3: hero con padding-top para que no quede bajo la navbar fija */
+    .hero {
+      background: url('fondo.jpg') center center no-repeat;
+      background-size: contain;
+      width: 100%;
+      height: 500px;
+      background-color: #000;
+      padding-top: 80px; /* espacio para la navbar */
+    }
 
     .btn {
       background-color: #d4af37;
@@ -81,114 +91,109 @@
       background-color: #ff8c00;
     }
 
-    /* Menú */
     .menu {
       text-align: center;
       padding: 3rem 2rem;
     }
 
-   .menu h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.2rem;
-  text-align: center;
-  color: #d4af37; /* dorado */
-  margin: 5rem 0 3rem; /* espacio amplio arriba y abajo */
-  padding: 1rem 0;
-  background: linear-gradient(to right, #000000, #1a1508, #000000); /* degradado negro/dorado */
-  border-top: 2px solid #d4af37;
-  border-bottom: 2px solid #d4af37;
-  position: relative;
-}
+    .menu h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      text-align: center;
+      color: #d4af37;
+      margin: 5rem 0 3rem;
+      padding: 1rem 0;
+      background: linear-gradient(to right, #000000, #1a1508, #000000);
+      border-top: 2px solid #d4af37;
+      border-bottom: 2px solid #d4af37;
+      position: relative;
+    }
 
-/* Línea decorativa adicional */
-.menu h2::after {
-  content: "";
-  display: block;
-  width: 120px;
-  height: 3px;
-  background: linear-gradient(to right, transparent, #d4af37, transparent);
-  margin: 1rem auto 0;
-  border-radius: 2px;
-}
+    .menu h2::after {
+      content: "";
+      display: block;
+      width: 120px;
+      height: 3px;
+      background: linear-gradient(to right, transparent, #d4af37, transparent);
+      margin: 1rem auto 0;
+      border-radius: 2px;
+    }
 
+    .carousel-section {
+      width: 100%;
+      height: 500px;
+      position: relative;
+      overflow: hidden;   /* FIX: contiene las imágenes del carrusel */
+    }
 
+    .carousel {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
 
+    .carousel-item {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
 
+    .carousel-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-.carousel-section {
-  width: 100%;
-  height: 500px;
-  position: relative;
-  overflow: hidden;
-}
+    .carousel-item.active {
+      opacity: 1;
+    }
 
-.carousel {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
+    .carousel-control {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      border: none;
+      font-size: 2rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      z-index: 10;
+    }
 
-.carousel-item {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 1s ease;
-}
+    .carousel-control.prev { left: 20px; }
+    .carousel-control.next { right: 20px; }
 
-.carousel-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+    .carousel-dots {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
 
-.carousel-item.active {
-  opacity: 1;
-}
+    .dot {
+      width: 12px;
+      height: 12px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 50%;
+      cursor: pointer;
+    }
 
-.carousel-control {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
-  color: #fff;
-  border: none;
-  font-size: 2rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  z-index: 10;
-}
+    .dot.active {
+      background: #fff;
+    }
 
-.carousel-control.prev { left: 20px; }
-.carousel-control.next { right: 20px; }
-
-.carousel-dots {
-  position: absolute;
-  bottom: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 10px;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  background: rgba(255,255,255,0.6);
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.dot.active {
-  background: #fff;
-}
-
-
-
+    /* ── FIX 4: menu-grid con overflow:hidden para atrapar animaciones ── */
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 2rem;
+      overflow: hidden;   /* atrapa los translateX de reveal-left/right */
+      position: relative;
     }
 
     .card {
@@ -197,17 +202,18 @@
       padding: 1rem;
       text-align: center;
       border-radius: 8px;
-        opacity: 1;
-  max-height: 1000px; /* suficiente para cualquier card */
-  overflow: hidden;
-  transition: all 0.6s ease; /* animación suave */
+      opacity: 1;
+      max-height: 1000px;
+      overflow: hidden;
+      transition: all 0.6s ease;
     }
+
     .card.hidden {
-  opacity: 0;
-  max-height: 0;
-  margin: 0;
-  padding: 0;
-}
+      opacity: 0;
+      max-height: 0;
+      margin: 0;
+      padding: 0;
+    }
 
     .card:hover {
       transform: translateY(-5px);
@@ -228,60 +234,64 @@
       font-weight: bold;
     }
 
-   /* Ubicación */
-.ubicacion {
-  background-color: #111; /* negro elegante */
-  text-align: center;
-  padding: 3rem 2rem;
-}
+    .card img {
+      max-width: 100%;   /* FIX: imágenes nunca salen del contenedor */
+      display: block;
+    }
 
-.ubicacion h2 {
-  font-family: 'Playfair Display', serif;
-  color: #d4af37; /* dorado */
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-}
+    /* Ubicación */
+    .ubicacion {
+      background-color: #111;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
 
-.ubicacion p {
-  color: #fff;
-  margin-bottom: 2rem;
-  font-size: 1.2rem;
-}
+    .ubicacion h2 {
+      font-family: 'Playfair Display', serif;
+      color: #d4af37;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
 
-.ubicacion iframe {
-  border: 2px solid #d4af37; /* marco dorado */
-  border-radius: 8px;
-  max-width: 100%;
-}
+    .ubicacion p {
+      color: #fff;
+      margin-bottom: 2rem;
+      font-size: 1.2rem;
+    }
 
-/* Segunda Ubicación */
-#ubicacion2 {
-  background-color: #111; /* negro elegante */
-  text-align: center;
-  padding: 3rem 2rem;
-}
+    .ubicacion iframe {
+      border: 2px solid #d4af37;
+      border-radius: 8px;
+      max-width: 100%;   /* FIX: iframe nunca se sale del ancho */
+      width: 100%;
+    }
 
-#ubicacion2 h2 {
-  font-family: 'Playfair Display', serif;
-  color: #d4af37; /* dorado */
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-}
+    #ubicacion2 {
+      background-color: #111;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
 
-#ubicacion2 p {
-  color: #fff;
-  margin-bottom: 2rem;
-  font-size: 1.2rem;
-}
+    #ubicacion2 h2 {
+      font-family: 'Playfair Display', serif;
+      color: #d4af37;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
 
-#ubicacion2 iframe {
-  border: 2px solid #d4af37; /* marco dorado */
-  border-radius: 8px;
-  max-width: 100%;
-}
+    #ubicacion2 p {
+      color: #fff;
+      margin-bottom: 2rem;
+      font-size: 1.2rem;
+    }
 
+    #ubicacion2 iframe {
+      border: 2px solid #d4af37;
+      border-radius: 8px;
+      max-width: 100%;   /* FIX: igual que arriba */
+      width: 100%;
+    }
 
-    /* Contacto */
     .contacto {
       text-align: center;
       padding: 3rem 2rem;
@@ -306,130 +316,143 @@
       color: #888;
       font-size: 0.9rem;
     }
+
     .ordenar {
-  text-align: center;   /* Centra todo el contenido */
-  padding: 3rem 2rem;
-}
+      text-align: center;
+      padding: 3rem 2rem;
+    }
 
-.ordenar h2 {
-  font-family: 'Playfair Display', serif;
-  color: #d4af37;
-  font-size: 2.5rem;
-}
+    .ordenar h2 {
+      font-family: 'Playfair Display', serif;
+      color: #d4af37;
+      font-size: 2.5rem;
+    }
 
-.ordenar p {
-  color: #ccc;
-  margin-bottom: 1rem;
-}
+    .ordenar p {
+      color: #ccc;
+      margin-bottom: 1rem;
+    }
 
-.ordenar .btn {
-  display: inline-block; /* Hace que el botón se centre */
-  margin: 0 auto;
-}
+    .ordenar .btn {
+      display: inline-block;
+      margin: 0 auto;
+    }
 
-.hidden {
-  display: none;
-}
+    .hidden {
+      display: none;
+    }
 
-.ver-mas {
-  display: block;
-  margin: 1.5rem auto;
-  padding: 0.8rem 1.5rem;
-  background: #d4af37; /* dorado */
-  color: #000;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
+    .ver-mas {
+      display: block;
+      margin: 1.5rem auto;
+      padding: 0.8rem 1.5rem;
+      background: #d4af37;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
 
-.ver-mas:hover {
-  background: #ff8c00; /* dorado más intenso */
-}
+    .ver-mas:hover {
+      background: #ff8c00;
+    }
 
-
-
-
-
+    /* ── MEDIA QUERIES MÓVIL ── */
     @media (max-width: 768px) {
-  .navbar {
-    padding: 0.5rem 1rem; /* menos espacio en móvil */
-  }
+      .navbar {
+        padding: 0.5rem 1rem;
+        flex-wrap: wrap;       /* FIX: logo + nav se apilan si no caben */
+        gap: 6px;
+      }
 
-  .navbar a {
-    font-size: 0.9rem; /* texto más pequeño */
-  }
+      .navbar ul {
+        gap: 0.8rem;
+        justify-content: center;
+      }
 
-  .hero h1 {
-    font-size: 2rem; /* título más compacto */
-  }
+      .navbar a {
+        font-size: 0.85rem;
+      }
 
-  .hero h2 {
-    font-size: 1.2rem; /* subtítulo más compacto */
-  }
+      .logo {
+        height: 45px;
+      }
 
-  .menu h2, .ordenar h2 {
-    font-size: 2rem;
-  }
+      .hero {
+        height: 300px;         /* más compacto en móvil */
+        padding-top: 100px;    /* navbar en móvil puede ser más alta */
+      }
 
-  .card p {
-    font-size: 0.9rem; /* descripción más ajustada */
-  }
+      .menu h2, .ordenar h2 {
+        font-size: 2rem;
+      }
 
-  .btn {
-    font-size: 0.9rem;
-    padding: 0.6rem 1rem; /* botones más cómodos en móvil */
-  }
-}
+      .card p {
+        font-size: 0.9rem;
+      }
 
+      .btn {
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+      }
 
+      .ubicacion iframe,
+      #ubicacion2 iframe {
+        height: 280px;         /* altura más compacta en móvil */
+      }
+    }
 
-/* ==========================
-   SCROLL REVEAL
-========================== */
+    /* ── SCROLL REVEAL ──
+       FIX 5: Los translateX grandes causaban el scroll horizontal.
+       Con overflow:hidden en .menu-grid quedan atrapados,
+       pero también reducimos a 40px por seguridad.
+    ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      visibility: hidden;
+    }
 
-/* Desde abajo */
-.reveal {
-    opacity: 0;
-    transform: translateY(60px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-    visibility: hidden;
-}
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+    }
 
-.reveal.active {
-    opacity: 1;
-    transform: translateY(0);
-    visibility: visible;
-}
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(40px);   /* reducido de 60px */
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      visibility: hidden;
+    }
 
-/* Desde la derecha */
-.reveal-right {
-    opacity: 0;
-    transform: translateX(60px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-    visibility: hidden;
-}
+    .reveal-right.active {
+      opacity: 1;
+      transform: translateX(0);
+      visibility: visible;
+    }
 
-.reveal-right.active {
-    opacity: 1;
-    transform: translateX(0);
-    visibility: visible;
-}
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-40px);  /* reducido de 60px */
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      visibility: hidden;
+    }
 
-/* Desde la izquierda */
-.reveal-left {
-    opacity: 0;
-    transform: translateX(-60px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-    visibility: hidden;
-}
+    .reveal-left.active {
+      opacity: 1;
+      transform: translateX(0);
+      visibility: visible;
+    }
 
-.reveal-left.active {
-    opacity: 1;
-    transform: translateX(0);
-    visibility: visible;
-}
+    /* Secciones también contienen las animaciones */
+    .menu, .ubicacion, #ubicacion2, .ordenar {
+      overflow: hidden;
+      position: relative;
+    }
 
   </style>
 </head>
@@ -441,531 +464,359 @@
         <li><a href="#inicio">Inicio</a></li>
         <li><a href="#menu">Menú</a></li>
         <li><a href="#ubicacion">Ubicacion</a></li>
-        <li><a href="#ordenar">ordenar</a></li>
+        <li><a href="#ordenar">Ordenar</a></li>
       </ul>
     </nav>
   </header>
 
-<section id="inicio" class="reveal-left hero"></section>
+  <section id="inicio" class="reveal-left hero"></section>
 
-
-
-
-
-<section id="slider" class="reveal-right carousel-section">
-  <div class="carousel">
-    <div class="carousel-item active">
-      <img src="duo-gorditas.jpg" alt="Imagen 1">
+  <section id="slider" class="reveal-right carousel-section">
+    <div class="carousel">
+      <div class="carousel-item active">
+        <img src="duo-gorditas.jpg" alt="Imagen 1">
+      </div>
+      <div class="carousel-item">
+        <img src="torta.jpg" alt="Imagen 2">
+      </div>
+      <div class="carousel-item">
+        <img src="manita-especial.jpg" alt="Imagen 3">
+      </div>
+      <button class="carousel-control prev">&#10094;</button>
+      <button class="carousel-control next">&#10095;</button>
+      <div class="carousel-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
     </div>
-    <div class="carousel-item">
-      <img src="torta.jpg" alt="Imagen 2">
-    </div>
-    <div class="carousel-item">
-      <img src="manita-especial.jpg
-      
-      " alt="Imagen 3">
-    </div>
-
-    <!-- Flechas -->
-    <button class="carousel-control prev">&#10094;</button>
-    <button class="carousel-control next">&#10095;</button>
-
-    <!-- Dots -->
-    <div class="carousel-dots">
-      <span class="dot active"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-    </div>
-  </div>
-</section>
-
-
+  </section>
 
   <section id="menu" class="reveal menu">
     <h2>Nuestro Menú</h2>
-  <div class="menu-grid">
-
-    <!-- Primeras 3 visibles -->
-    <div class="reveal-left card">
-      <img src="taco-cochinita.jpg" alt="Taco de Cochinita Pibil" width="100%">
-      <h3>Taco de Cochinita Pibil</h3>
-      <p>Tortilla de maíz rellena de cochinita pibil, se acompaña con cebollitas y salsa habanero.</p>
-      <span>$33.00</span>
+    <div class="menu-grid">
+      <div class="reveal-left card">
+        <img src="taco-cochinita.jpg" alt="Taco de Cochinita Pibil" width="100%">
+        <h3>Taco de Cochinita Pibil</h3>
+        <p>Tortilla de maíz rellena de cochinita pibil, se acompaña con cebollitas y salsa habanero.</p>
+        <span>$33.00</span>
+      </div>
+      <div class="reveal-right card">
+        <img src="panucho.jpg" alt="Panucho" width="100%">
+        <h3>Panucho</h3>
+        <p>Cochinita pibil sobre una tortilla de maíz frita rellena de frijol refrito.</p>
+        <span>$35.00</span>
+      </div>
+      <div class="reveal card">
+        <img src="torta.jpg" alt="Torta de Cochinita Pibil" width="100%">
+        <h3>Torta de Cochinita Pibil</h3>
+        <p>Pan levemente tostado, acompañado de una cama de frijol opcional y cochinita pibil.</p>
+        <span>$50.00</span>
+      </div>
+      <div class="reveal-left card hidden">
+        <img src="taco-dorado.jpg" alt="Taco Dorado de Cochinita" width="100%">
+        <h3>Taco Dorado de Cochinita</h3>
+        <p>Tortilla de maíz frita, rellena de cochinita pibil.</p>
+        <span>$33.00</span>
+      </div>
+      <div class="reveal-right card hidden">
+        <img src="gordita.jpg" alt="Gordita con Cochinita" width="100%">
+        <h3>Gordita con Cochinita</h3>
+        <p>Gordita de maíz frita rellena de cochinita pibil.</p>
+        <span>$40.00</span>
+      </div>
+      <div class="reveal card hidden">
+        <img src="costra.jpg" alt="Costra de Queso Rellena" width="100%">
+        <h3>Costra de Queso Rellena</h3>
+        <p>Costra de queso manchego y gouda, rellena de cochinita pibil.</p>
+        <span>$55.00</span>
+      </div>
+      <div class="reveal-left card hidden">
+        <img src="burrito.jpg" alt="Burrito Pibil" width="100%">
+        <h3>Burrito Pibil</h3>
+        <p>Tortilla de harina de 30cm rellena de cochinita pibil, junto con frijoles refritos.</p>
+        <span>$75.00</span>
+      </div>
+      <div class="reveal-right card hidden">
+        <img src="manita.jpg" alt="Manita Pibil" width="100%">
+        <h3>Manita Pibil</h3>
+        <p>Manita de puerco acompañada de 4 tortillas sofritas, cebollitas y salsa habanero.</p>
+        <span>$70.00</span>
+      </div>
     </div>
+    <button class="reveal ver-mas">Ver más +</button>
 
-    <div class="reveal-right card">
-      <img src="panucho.jpg" alt="Panucho" width="100%">
-      <h3>Panucho</h3>
-      <p>Cochinita pibil sobre una tortilla de maíz frita rellena de frijol refrito.</p>
-      <span>$35.00</span>
-    </div>
-
-    <div class="reveal card">
-      <img src="torta.jpg" alt="Torta de Cochinita Pibil" width="100%">
-      <h3>Torta de Cochinita Pibil</h3>
-      <p>Pan levemente tostado, acompañado de una cama de frijol opcional y cochinita pibil.</p>
-      <span>$50.00</span>
-    </div>
-
-    <!-- Las demás ocultas al inicio -->
-    <div class="reveal-left card hidden">
-      <img src="taco-dorado.jpg" alt="Taco Dorado de Cochinita" width="100%">
-      <h3>Taco Dorado de Cochinita</h3>
-      <p>Tortilla de maíz frita, rellena de cochinita pibil.</p>
-      <span>$33.00</span>
-    </div>
-
-    <div class="reveal-right card hidden">
-      <img src="gordita.jpg" alt="Gordita con Cochinita" width="100%">
-      <h3>Gordita con Cochinita</h3>
-      <p>Gordita de maíz frita rellena de cochinita pibil.</p>
-      <span>$40.00</span>
-    </div>
-
-    <div class="reveal card hidden">
-      <img src="costra.jpg" alt="Costra de Queso Rellena" width="100%">
-      <h3>Costra de Queso Rellena</h3>
-      <p>Costra de queso manchego y gouda, rellena de cochinita pibil.</p>
-      <span>$55.00</span>
-    </div>
-
-    <div class="reveal-left card hidden">
-      <img src="burrito.jpg" alt="Burrito Pibil" width="100%">
-      <h3>Burrito Pibil</h3>
-      <p>Tortilla de harina de 30cm rellena de cochinita pibil, junto con frijoles refritos.</p>
-      <span>$75.00</span>
-    </div>
-
-    <div class="reveal-right card hidden">
-      <img src="manita.jpg" alt="Manita Pibil" width="100%">
-      <h3>Manita Pibil</h3>
-      <p>Manita de puerco acompañada de 4 tortillas sofritas, cebollitas y salsa habanero.</p>
-      <span>$70.00</span>
-    </div>
-  </div>
-
-  <!-- Botón de despliegue -->
-  <button class="reveal ver-mas">Ver más +</button>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <!-- Promociones -->
     <h2>Promociones</h2>
-  <div class="reveal-left menu-grid">
+    <div class="reveal-left menu-grid">
+      <div class="reveal-right card">
+        <img src="orden-tacos.jpg" alt="Orden de Tacos Suaves" width="100%">
+        <h3>Orden de Tacos Suaves</h3>
+        <p>3 tacos suaves de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa.</p>
+        <span>$90.00 <del>$99.00</del></span>
+      </div>
+      <div class="reveal card">
+        <img src="orden-panuchos.jpg" alt="Orden de Panuchos" width="100%">
+        <h3>Orden de Panuchos</h3>
+        <p>3 panuchos de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa.</p>
+        <span>$100.00 <del>$105.00</del></span>
+      </div>
+      <div class="reveal-left card">
+        <img src="burritos.jpg" alt="Burritos Cuates" width="100%">
+        <h3>Burritos Cuates</h3>
+        <p>2 burritos de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa.</p>
+        <span>$120.00 <del>$150.00</del></span>
+      </div>
+      <div class="reveal-right card hidden">
+        <img src="duo-gorditas.jpg" alt="Dúo de Gorditas" width="100%">
+        <h3>Dúo de Gorditas</h3>
+        <p>2 gorditas de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa.</p>
+        <span>$60.00 <del>$80.00</del></span>
+      </div>
+      <div class="reveal card hidden">
+        <img src="orden-dorados.jpg" alt="Orden de Tacos Dorados" width="100%">
+        <h3>Orden de Tacos Dorados</h3>
+        <p>4 tacos dorados de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa.</p>
+        <span>$120.00 <del>$132.00</del></span>
+      </div>
+      <div class="reveal-left card hidden">
+        <img src="duo-tortas.jpg" alt="Dúo de Tortas Pibil" width="100%">
+        <h3>Dúo de Tortas Pibil</h3>
+        <p>2 tortas de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa.</p>
+        <span>$90.00 <del>$96.00</del></span>
+      </div>
+    </div>
+    <button class="reveal-right ver-mas">Ver más +</button>
 
-    <!-- Primeras 3 visibles -->
-    <div class="reveal-right card">
-      <img src="orden-tacos.jpg" alt="Orden de Tacos Suaves" width="100%">
-      <h3>Orden de Tacos Suaves</h3>
-      <p>3 tacos suaves de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa.</p>
-      <span>$90.00 <del>$99.00</del></span>
+    <h2>Platillos especiales</h2>
+    <div class="reveal menu-grid">
+      <div class="reveal card">
+        <img src="manita-especial.jpg" alt="Manita a la Pibil Especial" width="100%">
+        <h3>Manita a la Pibil Especial</h3>
+        <p>Manita a la pibil acompañada de cochinita y 3 tostadas rellenas de frijol refrito.</p>
+        <span>$120.00</span>
+      </div>
+      <div class="reveal-left card">
+        <img src="costilla.jpg" alt="Costilla con Espinazo Pibil" width="100%">
+        <h3>Costilla con Espinazo Pibil</h3>
+        <p>Costillitas con espinazo a la pibil acompañada de tostadas, tortillas sofritas y salsa habanera.</p>
+        <span>$140.00</span>
+      </div>
+      <div class="reveal-right card">
+        <img src="paquete-especial2.jpg" alt="Paquete Especial" width="100%">
+        <h3>Paquete Especial</h3>
+        <p>1 kilo de cochinita, 12 tostadas rellenas con frijol, tortillas, cebollitas y frijoles refritos.</p>
+        <span>$420.00</span>
+      </div>
     </div>
 
-    <div class="reveal card">
-      <img src="orden-panuchos.jpg" alt="Orden de Panuchos" width="100%">
-      <h3>Orden de Panuchos</h3>
-      <p>3 panuchos de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa.</p>
-      <span>$100.00 <del>$105.00</del></span>
+    <h2>CochiPaq's</h2>
+    <div class="reveal menu-grid">
+      <div class="reveal-left card">
+        <img src="paquete-especial.jpg" alt="CochiPaq 1" width="100%">
+        <h3>CochiPaq 1 (250gr)</h3>
+        <p>1/4 de cochinita más 3 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos.</p>
+        <span>$99.00</span>
+      </div>
+      <div class="reveal-right card">
+        <img src="paquete-especial.jpg" alt="CochiPaq 2" width="100%">
+        <h3>CochiPaq 2 (500gr)</h3>
+        <p>1/2 de cochinita más 6 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos.</p>
+        <span>$199.00</span>
+      </div>
+      <div class="reveal card">
+        <img src="paquete-especial.jpg" alt="CochiPaq 3" width="100%">
+        <h3>CochiPaq 3 (750gr)</h3>
+        <p>3/4 de cochinita más 9 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos.</p>
+        <span>$299.00</span>
+      </div>
+      <div class="reveal-left card hidden">
+        <img src="paquete-especial.jpg" alt="CochiPaq 4" width="100%">
+        <h3>CochiPaq 4 (1kg)</h3>
+        <p>1 kilo de cochinita más 12 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos.</p>
+        <span>$399.00</span>
+      </div>
+      <div class="reveal-right card hidden">
+        <img src="paquete-especial.jpg" alt="CochiPaq 5" width="100%">
+        <h3>CochiPaq 5 (1.5kg)</h3>
+        <p>1.5 kilos de cochinita más 18 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos.</p>
+        <span>$590.00</span>
+      </div>
+      <div class="reveal card hidden">
+        <img src="paquete-especial.jpg" alt="CochiPaq 6" width="100%">
+        <h3>CochiPaq 6 (2kg)</h3>
+        <p>2 kilos de cochinita más 25 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos.</p>
+        <span>$790.00</span>
+      </div>
+      <div class="reveal-left card hidden">
+        <img src="cochinitangramos.jpg" alt="500 gramos de Cochinita" width="100%">
+        <h3>500 gramos de Cochinita</h3>
+        <p>500 gr de cochinita acompañados de cebollitas con y sin habanero, salsa habanera y frijoles refritos.</p>
+        <span>$185.00</span>
+      </div>
+      <div class="reveal-right card hidden">
+        <img src="cochinitangramos.jpg" alt="750 gramos de Cochinita" width="100%">
+        <h3>750 gramos de Cochinita</h3>
+        <p>750 gr de cochinita acompañados de cebollitas con y sin habanero, salsa habanera y frijoles refritos.</p>
+        <span>$275.00</span>
+      </div>
+      <div class="reveal card hidden">
+        <img src="cochinitangramos.jpg" alt="1 kilo de Cochinita" width="100%">
+        <h3>1 kilo de Cochinita</h3>
+        <p>1 kg de cochinita acompañados de cebollitas con y sin habanero, salsa habanera y frijoles refritos.</p>
+        <span>$370.00</span>
+      </div>
     </div>
+    <button class="reveal ver-mas">Ver más +</button>
 
-    <div class="reveal-left card">
-      <img src="burritos.jpg" alt="Burritos Cuates" width="100%">
-      <h3>Burritos Cuates</h3>
-      <p>2 burritos de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa.</p>
-      <span>$120.00 <del>$150.00</del></span>
+    <h2>Aguas de la casa</h2>
+    <div class="reveal-left menu-grid">
+      <div class="reveal-right card">
+        <img src="agua-jamaica.jpg" alt="Agua de Jamaica" width="100%">
+        <h3>Agua de Jamaica</h3>
+        <p>Agua de sabor natural de 500 ml.</p>
+        <span>$23.00 <del>$25.00</del></span>
+      </div>
+      <div class="reveal card">
+        <img src="agua-maracuya.jpg" alt="Agua de Maracuyá" width="100%">
+        <h3>Agua de Maracuyá</h3>
+        <p>Agua de sabor natural de 500 ml.</p>
+        <span>$23.00 <del>$25.00</del></span>
+      </div>
+      <div class="reveal-left card">
+        <img src="agua-horchata.jpg" alt="Agua de Horchata" width="100%">
+        <h3>Agua de Horchata</h3>
+        <p>Agua de sabor natural de 500 ml.</p>
+        <span>$23.00 <del>$25.00</del></span>
+      </div>
+      <div class="reveal-right card hidden">
+        <img src="agua-limon.jpg" alt="Agua de Limón con Menta" width="100%">
+        <h3>Agua de Limón con Menta</h3>
+        <p>Agua de sabor natural de 500 ml.</p>
+        <span>$23.00 <del>$25.00</del></span>
+      </div>
+      <div class="reveal card hidden">
+        <img src="agua-pina.jpg" alt="Agua de Piña Colada" width="100%">
+        <h3>Agua de Piña Colada</h3>
+        <p>Agua sabor piña coco de 500 ml.</p>
+        <span>$23.00 <del>$25.00</del></span>
+      </div>
     </div>
+    <button class="reveal-left ver-mas">Ver más +</button>
 
-    <!-- Ocultas al inicio -->
-    <div class="reveal-right card hidden">
-      <img src="duo-gorditas.jpg" alt="Dúo de Gorditas" width="100%">
-      <h3>Dúo de Gorditas</h3>
-      <p>2 gorditas de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa.</p>
-      <span>$60.00 <del>$80.00</del></span>
+    <h2 class="reveal">Extras</h2>
+    <div class="reveal-left menu-grid">
+      <div class="reveal-right card">
+        <img src="tostadas-panucheras.jpg" alt="Orden de Tostadas Panucheras" width="100%">
+        <h3>Orden de Tostadas Panucheras</h3>
+        <p>10 piezas de tostadas panucheras.</p>
+        <span>$50.00 <del>$70.00</del></span>
+      </div>
+      <div class="reveal card">
+        <img src="tostadas-extra.jpg" alt="Tostadas Panucheras Adicionales" width="100%">
+        <h3>Tostadas Panucheras Adicionales</h3>
+        <p>2 tostadas de maíz rellenas con frijol refrito.</p>
+        <span>$10.00 <del>$14.00</del></span>
+      </div>
     </div>
-
-    <div class="reveal card hidden">
-      <img src="orden-dorados.jpg" alt="Orden de Tacos Dorados" width="100%">
-      <h3>Orden de Tacos Dorados</h3>
-      <p>4 tacos dorados de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa.</p>
-      <span>$120.00 <del>$132.00</del></span>
-    </div>
-
-    <div class="reveal-left card hidden">
-      <img src="duo-tortas.jpg" alt="Dúo de Tortas Pibil" width="100%">
-      <h3>Dúo de Tortas Pibil</h3>
-      <p>2 tortas de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa.</p>
-      <span>$90.00 <del>$96.00</del></span>
-    </div>
-  </div>
-
-  <!-- Botón de despliegue -->
-  <button class="reveal-right ver-mas">Ver más +</button>
-
-
-
-
-
-
-
-
-
-
-    <!-- Platillos especiales -->
-     <h2>Platillos especiales</h2>
-     <div class="reveal menu-grid">
-    <div class="reveal card">
-      <img src="manita-especial.jpg" alt="Manita a la Pibil Especial" width="100%">
-      <h3>Manita a la Pibil Especial</h3>
-      <p>Manita a la pibil acompañada de cochinita y 3 tostadas rellenas de frijol refrito.</p>
-      <span>$120.00</span>
-    </div>
-
-    <div class="reveal-left card">
-      <img src="costilla.jpg" alt="Costilla con Espinazo Pibil" width="100%">
-      <h3>Costilla con Espinazo Pibil</h3>
-      <p>Costillitas con espinazo a la pibil acompañada de tostadas, tortillas sofritas y salsa habanera.</p>
-      <span>$140.00</span>
-    </div>
-
-    <div class="reveal-right card">
-      <img src="paquete-especial2.jpg" alt="Paquete Especial" width="100%">
-      <h3>Paquete Especial</h3>
-      <p>1 kilo de cochinita, 12 tostadas rellenas con frijol, tortillas, cebollitas y frijoles refritos.</p>
-      <span>$420.00</span>
-    </div>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <!-- Cochipacks -->
- <h2>CochiPaq's</h2>
-  <div class="reveal menu-grid">
-
-    <!-- Primeras 3 visibles -->
-    <div class="reveal-left card">
-      <img src="paquete-especial.jpg" alt="CochiPaq 1" width="100%">
-      <h3>CochiPaq 1 (250gr)</h3>
-      <p>1/4 de cochinita más 3 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos.</p>
-      <span>$99.00</span>
-    </div>
-
-    <div class="reveal-right card">
-      <img src="paquete-especial.jpg" alt="CochiPaq 2" width="100%">
-      <h3>CochiPaq 2 (500gr)</h3>
-      <p>1/2 de cochinita más 6 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos.</p>
-      <span>$199.00</span>
-    </div>
-
-    <div class="reveal card">
-      <img src="paquete-especial.jpg" alt="CochiPaq 3" width="100%">
-      <h3>CochiPaq 3 (750gr)</h3>
-      <p>3/4 de cochinita más 9 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos.</p>
-      <span>$299.00</span>
-    </div>
-
-    <!-- Ocultas al inicio -->
-    <div class="reveal-left card hidden">
-      <img src="paquete-especial.jpg" alt="CochiPaq 4" width="100%">
-      <h3>CochiPaq 4 (1kg)</h3>
-      <p>1 kilo de cochinita más 12 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos.</p>
-      <span>$399.00</span>
-    </div>
-
-    <div class="reveal-right card hidden">
-      <img src="paquete-especial.jpg" alt="CochiPaq 5" width="100%">
-      <h3>CochiPaq 5 (1.5kg)</h3>
-      <p>1.5 kilos de cochinita más 18 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos.</p>
-      <span>$590.00</span>
-    </div>
-
-    <div class="reveal card hidden">
-      <img src="paquete-especial.jpg" alt="CochiPaq 6" width="100%">
-      <h3>CochiPaq 6 (2kg)</h3>
-      <p>2 kilos de cochinita más 25 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos.</p>
-      <span>$790.00</span>
-    </div>
-
-    <div class="reveal-left card hidden">
-      <img src="cochinitangramos.jpg" alt="500 gramos de Cochinita" width="100%">
-      <h3>500 gramos de Cochinita</h3>
-      <p>500 gr de cochinita acompañados de cebollitas con y sin habanero, salsa habanera y frijoles refritos.</p>
-      <span>$185.00</span>
-    </div>
-
-    <div class="reveal-right card hidden">
-      <img src="cochinitangramos.jpg" alt="750 gramos de Cochinita" width="100%">
-      <h3>750 gramos de Cochinita</h3>
-      <p>750 gr de cochinita acompañados de cebollitas con y sin habanero, salsa habanera y frijoles refritos.</p>
-      <span>$275.00</span>
-    </div>
-
-    <div class="reveal card hidden">
-      <img src="cochinitangramos.jpg" alt="1 kilo de Cochinita" width="100%">
-      <h3>1 kilo de Cochinita</h3>
-      <p>1 kg de cochinita acompañados de cebollitas con y sin habanero, salsa habanera y frijoles refritos.</p>
-      <span>$370.00</span>
-    </div>
-  </div>
-
-  <!-- Botón de despliegue -->
-  <button class="reveal ver-mas">Ver más +</button>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- Aguas de la casa -->
-  <h2>Aguas de la casa</h2>
-  <div class="reveal-left menu-grid">
-
-    <!-- Primeras 3 visibles -->
-    <div class="reveal-right card">
-      <img src="agua-jamaica.jpg" alt="Agua de Jamaica" width="100%">
-      <h3>Agua de Jamaica</h3>
-      <p>Agua de sabor natural de 500 ml.</p>
-      <span>$23.00 <del>$25.00</del></span>
-    </div>
-
-    <div class="reveal card">
-      <img src="agua-maracuya.jpg" alt="Agua de Maracuyá" width="100%">
-      <h3>Agua de Maracuyá</h3>
-      <p>Agua de sabor natural de 500 ml.</p>
-      <span>$23.00 <del>$25.00</del></span>
-    </div>
-
-    <div class="reveal-left card">
-      <img src="agua-horchata.jpg" alt="Agua de Horchata" width="100%">
-      <h3>Agua de Horchata</h3>
-      <p>Agua de sabor natural de 500 ml.</p>
-      <span>$23.00 <del>$25.00</del></span>
-    </div>
-
-    <!-- Ocultas al inicio -->
-    <div class="reveal-right card hidden">
-      <img src="agua-limon.jpg" alt="Agua de Limón con Menta" width="100%">
-      <h3>Agua de Limón con Menta</h3>
-      <p>Agua de sabor natural de 500 ml.</p>
-      <span>$23.00 <del>$25.00</del></span>
-    </div>
-
-    <div class="reveal card hidden">
-      <img src="agua-pina.jpg" alt="Agua de Piña Colada" width="100%">
-      <h3>Agua de Piña Colada</h3>
-      <p>Agua sabor piña coco de 500 ml.</p>
-      <span>$23.00 <del>$25.00</del></span>
-    </div>
-  </div>
-
-  <!-- Botón de despliegue -->
-  <button class="reveal-left ver-mas">Ver más +</button>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- Extras -->
-<h2 class="reveal">Extras</h2>
-<div class="reveal-left menu-grid">
-
-  <div class="reveal-right card">
-    <img src="tostadas-panucheras.jpg" alt="Orden de Tostadas Panucheras" width="100%">
-    <h3>Orden de Tostadas Panucheras</h3>
-    <p>10 piezas de tostadas panucheras.</p>
-    <span>$50.00 <del>$70.00</del></span>
-  </div>
-
-  <div class="reveal card">
-    <img src="tostadas-extra.jpg" alt="Tostadas Panucheras Adicionales" width="100%">
-    <h3>Tostadas Panucheras Adicionales</h3>
-    <p>2 tostadas de maíz rellenas con frijol refrito.</p>
-    <span>$10.00 <del>$14.00</del></span>
-  </div>
-</div>
-
-
-
-
-
-
-
-
-</section>
-
-
- <section id="ubicacion" class="reveal-left ubicacion">
-  <h2>Ubicación</h2>
-  <p>Encuéntranos fácilmente en nuestra sucursal:</p>
-  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3757.9910403206363!2d-99.03454832732675!3d19.62768080696003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f3402cf83275%3A0x834179b17cd2ed6c!2sEl%20Chino%2C%20Cochinita%20a%20la%20Pibil%20Suc.%20H%C3%A9roes!5e0!3m2!1ses!2smx!4v1783622914843!5m2!1ses!2smx" 
-          width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" 
-          referrerpolicy="strict-origin-when-cross-origin"></iframe>
-</section>
-
-
-<section id="ubicacion2" class="reveal-right ubicacion">
-  <h2>También nos puedes encontrar en:</h2>
-  <p>Mercadito Gourmet — Ojo de Agua, Méx.</p>
-  <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3757.2871972630555!2d-99.019624!3d19.657749!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f30055a9fcdb%3A0x5122f231fde8cf41!2sMercadito%20Gourmet!5e0!3m2!1ses-419!2smx!4v1783623680683!5m2!1ses-419!2smx" 
-          width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" 
-          referrerpolicy="strict-origin-when-cross-origin"></iframe>
-</section>
-
-
-<section id="ordenar" class="reveal ordenar">
-  <h2>Ordenar</h2>
-  <p>Haz tu pedido fácilmente por WhatsApp.</p>
-  <a href="https://wa.me/5215561438164" class="btn whatsapp" target="_blank">
-    Ordenar por WhatsApp
-  </a>
-</section>
-
+  </section>
+
+  <section id="ubicacion" class="reveal-left ubicacion">
+    <h2>Ubicación</h2>
+    <p>Encuéntranos fácilmente en nuestra sucursal:</p>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3757.9910403206363!2d-99.03454832732675!3d19.62768080696003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f3402cf83275%3A0x834179b17cd2ed6c!2sEl%20Chino%2C%20Cochinita%20a%20la%20Pibil%20Suc.%20H%C3%A9roes!5e0!3m2!1ses!2smx!4v1783622914843!5m2!1ses!2smx"
+            height="450" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </section>
+
+  <section id="ubicacion2" class="reveal-right ubicacion">
+    <h2>También nos puedes encontrar en:</h2>
+    <p>Mercadito Gourmet — Ojo de Agua, Méx.</p>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3757.2871972630555!2d-99.019624!3d19.657749!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f30055a9fcdb%3A0x5122f231fde8cf41!2sMercadito%20Gourmet!5e0!3m2!1ses-419!2smx!4v1783623680683!5m2!1ses-419!2smx"
+            height="450" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </section>
+
+  <section id="ordenar" class="reveal ordenar">
+    <h2>Ordenar</h2>
+    <p>Haz tu pedido fácilmente por WhatsApp.</p>
+    <a href="https://wa.me/5215561438164" class="btn whatsapp" target="_blank">
+      Ordenar por WhatsApp
+    </a>
+  </section>
 
   <footer>
     <p>© 2026 Mi Chonita Pibil. Todos los derechos reservados.</p>
   </footer>
 
   <script>
-document.querySelectorAll('.ver-mas').forEach(button => {
-  button.addEventListener('click', () => {
-    const section = button.previousElementSibling; // el div.menu-grid
-    if (button.textContent.includes('más')) {
-      section.querySelectorAll('.card').forEach(card => card.classList.remove('hidden'));
-      button.textContent = 'Ver menos -';
-    } else {
-      section.querySelectorAll('.card').forEach((card, index) => {
-        if (index >= 3) card.classList.add('hidden');
-      });
-      button.textContent = 'Ver más +';
-    }
-  });
-});
-
-
-
-const items = document.querySelectorAll('.carousel-item');
-const dots = document.querySelectorAll('.dot');
-const prevBtn = document.querySelector('.carousel-control.prev');
-const nextBtn = document.querySelector('.carousel-control.next');
-let current = 0;
-let interval = setInterval(nextSlide, 4000);
-
-function showSlide(index) {
-  items.forEach((item, i) => {
-    item.classList.toggle('active', i === index);
-    dots[i].classList.toggle('active', i === index);
-  });
-}
-
-function nextSlide() {
-  current = (current + 1) % items.length;
-  showSlide(current);
-}
-
-function prevSlide() {
-  current = (current - 1 + items.length) % items.length;
-  showSlide(current);
-}
-
-nextBtn.addEventListener('click', () => {
-  nextSlide();
-  resetInterval();
-});
-
-prevBtn.addEventListener('click', () => {
-  prevSlide();
-  resetInterval();
-});
-
-dots.forEach((dot, index) => {
-  dot.addEventListener('click', () => {
-    current = index;
-    showSlide(current);
-    resetInterval();
-  });
-});
-
-function resetInterval() {
-  clearInterval(interval);
-  interval = setInterval(nextSlide, 4000);
-}
-
-
-
-
-function revealOnScroll() {
-
-    const reveals = document.querySelectorAll(
-        '.reveal, .reveal-right, .reveal-left'
-    );
-
-    const windowHeight = window.innerHeight;
-
-    reveals.forEach(element => {
-
-        const elementTop = element.getBoundingClientRect().top;
-
-        const elementVisible = 150;
-
-        if (elementTop < windowHeight - elementVisible) {
-
-            element.classList.add("active");
-
+    // Ver más / Ver menos
+    document.querySelectorAll('.ver-mas').forEach(button => {
+      button.addEventListener('click', () => {
+        const section = button.previousElementSibling;
+        if (button.textContent.includes('más')) {
+          section.querySelectorAll('.card').forEach(card => card.classList.remove('hidden'));
+          button.textContent = 'Ver menos -';
         } else {
-
-            element.classList.remove("active");
-
+          section.querySelectorAll('.card').forEach((card, index) => {
+            if (index >= 3) card.classList.add('hidden');
+          });
+          button.textContent = 'Ver más +';
         }
-
+      });
     });
 
-}
+    // Carrusel
+    const items = document.querySelectorAll('.carousel-item');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.querySelector('.carousel-control.prev');
+    const nextBtn = document.querySelector('.carousel-control.next');
+    let current = 0;
+    let interval = setInterval(nextSlide, 4000);
 
-window.addEventListener("scroll", revealOnScroll);
-window.addEventListener("load", revealOnScroll);
+    function showSlide(index) {
+      items.forEach((item, i) => {
+        item.classList.toggle('active', i === index);
+        dots[i].classList.toggle('active', i === index);
+      });
+    }
+
+    function nextSlide() {
+      current = (current + 1) % items.length;
+      showSlide(current);
+    }
+
+    function prevSlide() {
+      current = (current - 1 + items.length) % items.length;
+      showSlide(current);
+    }
+
+    nextBtn.addEventListener('click', () => { nextSlide(); resetInterval(); });
+    prevBtn.addEventListener('click', () => { prevSlide(); resetInterval(); });
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => { current = index; showSlide(current); resetInterval(); });
+    });
+
+    function resetInterval() {
+      clearInterval(interval);
+      interval = setInterval(nextSlide, 4000);
+    }
+
+    // Scroll Reveal
+    function revealOnScroll() {
+      const reveals = document.querySelectorAll('.reveal, .reveal-right, .reveal-left');
+      const windowHeight = window.innerHeight;
+      reveals.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        if (elementTop < windowHeight - 150) {
+          element.classList.add('active');
+        } else {
+          element.classList.remove('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
   </script>
-  
 </body>
 </html>
-
