@@ -112,6 +112,79 @@
 }
 
 
+
+
+
+.carousel-section {
+  width: 100%;
+  height: 500px;
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.carousel-item {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carousel-item.active {
+  opacity: 1;
+}
+
+.carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  border: none;
+  font-size: 2rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.carousel-control.prev { left: 20px; }
+.carousel-control.next { right: 20px; }
+
+.carousel-dots {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dot.active {
+  background: #fff;
+}
+
+
+
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -326,6 +399,35 @@
   </header>
 
 <section id="inicio" class="hero"></section>
+
+
+
+
+
+<section id="slider" class="carousel-section">
+  <div class="carousel">
+    <div class="carousel-item active">
+      <img src="duo-gorditas.jpg" alt="Imagen 1">
+    </div>
+    <div class="carousel-item">
+      <img src="torta.jpg" alt="Imagen 2">
+    </div>
+    <div class="carousel-item">
+      <img src="manita-especial.jpg" alt="Imagen 3">
+    </div>
+
+    <!-- Flechas -->
+    <button class="carousel-control prev">&#10094;</button>
+    <button class="carousel-control next">&#10095;</button>
+
+    <!-- Dots -->
+    <div class="carousel-dots">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </div>
+</section>
 
 
 
@@ -730,6 +832,54 @@ document.querySelectorAll('.ver-mas').forEach(button => {
   });
 });
 
+
+
+const items = document.querySelectorAll('.carousel-item');
+const dots = document.querySelectorAll('.dot');
+const prevBtn = document.querySelector('.carousel-control.prev');
+const nextBtn = document.querySelector('.carousel-control.next');
+let current = 0;
+let interval = setInterval(nextSlide, 4000);
+
+function showSlide(index) {
+  items.forEach((item, i) => {
+    item.classList.toggle('active', i === index);
+    dots[i].classList.toggle('active', i === index);
+  });
+}
+
+function nextSlide() {
+  current = (current + 1) % items.length;
+  showSlide(current);
+}
+
+function prevSlide() {
+  current = (current - 1 + items.length) % items.length;
+  showSlide(current);
+}
+
+nextBtn.addEventListener('click', () => {
+  nextSlide();
+  resetInterval();
+});
+
+prevBtn.addEventListener('click', () => {
+  prevSlide();
+  resetInterval();
+});
+
+dots.forEach((dot, index) => {
+  dot.addEventListener('click', () => {
+    current = index;
+    showSlide(current);
+    resetInterval();
+  });
+});
+
+function resetInterval() {
+  clearInterval(interval);
+  interval = setInterval(nextSlide, 4000);
+}
 
   </script>
   
