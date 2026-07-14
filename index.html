@@ -118,74 +118,175 @@
       margin: 1rem auto 0;
       border-radius: 2px;
     }
+/* ── CARRUSEL CRISTAL ── */
+.carousel-section {
+  width: 100%;
+  padding: 40px 0;
+  position: relative;
+  overflow: hidden;
+  background: rgba(0,0,0,0.3);
+}
 
-    .carousel-section {
-      width: 100%;
-      height: 500px;
-      position: relative;
-      overflow: hidden;   /* FIX: contiene las imágenes del carrusel */
-    }
+.carousel-track-wrapper {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
 
-    .carousel {
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
+.carousel-track {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
 
-    .carousel-item {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      transition: opacity 1s ease;
-    }
+/* Card base */
+.carousel-card {
+  flex: 0 0 33.333%;          /* 3 visibles en desktop */
+  padding: 0 12px;
+  transition: transform 0.6s ease, opacity 0.6s ease;
+  opacity: 0.45;
+  transform: scale(0.88);
+}
 
-    .carousel-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+/* Card central destacada */
+.carousel-card.center {
+  opacity: 1;
+  transform: scale(1);
+}
 
-    .carousel-item.active {
-      opacity: 1;
-    }
+.carousel-card-inner {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  /* Efecto cristal oscuro */
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(212,175,55,0.35);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+}
 
-    .carousel-control {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0,0,0,0.5);
-      color: #fff;
-      border: none;
-      font-size: 2rem;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      z-index: 10;
-    }
+/* Cristal más brillante en la card central */
+.carousel-card.center .carousel-card-inner {
+  border-color: rgba(212,175,55,0.75);
+  box-shadow:
+    0 16px 48px rgba(0,0,0,0.6),
+    0 0 24px rgba(212,175,55,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+}
 
-    .carousel-control.prev { left: 20px; }
-    .carousel-control.next { right: 20px; }
+.carousel-card-inner img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
 
-    .carousel-dots {
-      position: absolute;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 10px;
-    }
+.carousel-card.center .carousel-card-inner img {
+  height: 380px;              /* más alta la card central */
+}
 
-    .dot {
-      width: 12px;
-      height: 12px;
-      background: rgba(255,255,255,0.6);
-      border-radius: 50%;
-      cursor: pointer;
-    }
+.carousel-card-inner:hover img {
+  transform: scale(1.04);
+}
 
-    .dot.active {
-      background: #fff;
-    }
+/* Etiqueta opcional sobre la imagen */
+.carousel-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px 16px 16px;
+  background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.carousel-card.center .carousel-label {
+  opacity: 1;
+}
+
+/* Controles */
+.carousel-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.carousel-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(212,175,55,0.5);
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  color: #d4af37;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.carousel-btn:hover {
+  background: rgba(212,175,55,0.15);
+  border-color: #d4af37;
+  box-shadow: 0 0 12px rgba(212,175,55,0.3);
+}
+
+.carousel-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  padding: 0;
+}
+
+.carousel-dot.active {
+  background: #d4af37;
+  width: 24px;                /* dot activo se alarga */
+  border-radius: 4px;
+  box-shadow: 0 0 8px rgba(212,175,55,0.5);
+}
+
+/* Móvil: 1 card visible */
+@media (max-width: 768px) {
+  .carousel-card {
+    flex: 0 0 80%;
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+  .carousel-card.center {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .carousel-card-inner img,
+  .carousel-card.center .carousel-card-inner img {
+    height: 240px;
+  }
+  .carousel-label {
+    opacity: 1;              /* siempre visible en móvil */
+  }
+}
 
     /* ── FIX 4: menu-grid con overflow:hidden para atrapar animaciones ── */
     .menu-grid {
@@ -471,26 +572,54 @@
 
   <section style="margin-top: 100px; margin-bottom: 100px;" id="inicio" class="reveal-left hero"></section>
 
-  <section id="slider" class="reveal-right carousel-section">
-    <div class="carousel">
-      <div class="carousel-item active">
-        <img src="duo-gorditas.jpg" alt="Imagen 1">
+
+
+
+<section id="slider" class="carousel-section">
+  <div class="carousel-track-wrapper">
+    <div class="carousel-track" id="carouselTrack">
+
+      <!-- Repite este bloque por cada imagen -->
+      <!-- El texto en carousel-label es opcional, puedes quitarlo -->
+
+      <div class="carousel-card">
+        <div class="carousel-card-inner">
+          <img src="duo-gorditas.jpg" alt="Dúo de Gorditas">
+          <div class="carousel-label">Dúo de Gorditas</div>
+        </div>
       </div>
-      <div class="carousel-item">
-        <img src="torta.jpg" alt="Imagen 2">
+
+      <div class="carousel-card">
+        <div class="carousel-card-inner">
+          <img src="torta.jpg" alt="Torta de Cochinita">
+          <div class="carousel-label">Torta de Cochinita</div>
+        </div>
       </div>
-      <div class="carousel-item">
-        <img src="manita-especial.jpg" alt="Imagen 3">
+
+      <div class="carousel-card">
+        <div class="carousel-card-inner">
+          <img src="manita-especial.jpg" alt="Manita Especial">
+          <div class="carousel-label">Manita Especial</div>
+        </div>
       </div>
-      <button class="carousel-control prev">&#10094;</button>
-      <button class="carousel-control next">&#10095;</button>
-      <div class="carousel-dots">
-        <span class="dot active"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-      </div>
+
+      <!-- Agrega más cards aquí si quieres -->
+
     </div>
-  </section>
+  </div>
+
+  <!-- Controles -->
+  <div class="carousel-controls">
+    <button class="carousel-btn" id="prevBtn">&#10094;</button>
+    <div class="carousel-dots" id="carouselDots"></div>
+    <button class="carousel-btn" id="nextBtn">&#10095;</button>
+  </div>
+</section>
+
+
+
+
+
 
   <section id="menu" class="reveal menu">
     <h2>Nuestro Menú</h2>
@@ -765,41 +894,66 @@
       });
     });
 
-    // Carrusel
-    const items = document.querySelectorAll('.carousel-item');
-    const dots = document.querySelectorAll('.dot');
-    const prevBtn = document.querySelector('.carousel-control.prev');
-    const nextBtn = document.querySelector('.carousel-control.next');
-    let current = 0;
-    let interval = setInterval(nextSlide, 4000);
+  (function () {
+  const track      = document.getElementById('carouselTrack');
+  const cards      = Array.from(track.querySelectorAll('.carousel-card'));
+  const dotsWrap   = document.getElementById('carouselDots');
+  const prevBtn    = document.getElementById('prevBtn');
+  const nextBtn    = document.getElementById('nextBtn');
+  const total      = cards.length;
+  let current      = 0;
+  let autoInterval = setInterval(goNext, 4000);
 
-    function showSlide(index) {
-      items.forEach((item, i) => {
-        item.classList.toggle('active', i === index);
-        dots[i].classList.toggle('active', i === index);
-      });
-    }
+  // Crear dots dinámicamente
+  cards.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+    dot.addEventListener('click', () => { goTo(i); resetAuto(); });
+    dotsWrap.appendChild(dot);
+  });
 
-    function nextSlide() {
-      current = (current + 1) % items.length;
-      showSlide(current);
-    }
+  function update() {
+    const dots     = dotsWrap.querySelectorAll('.carousel-dot');
+    const isMobile = window.innerWidth <= 768;
+    const cardW    = cards[0].offsetWidth;
 
-    function prevSlide() {
-      current = (current - 1 + items.length) % items.length;
-      showSlide(current);
-    }
+    // Mover el track para centrar la card activa
+    const offset = current * cardW - (track.parentElement.offsetWidth / 2 - cardW / 2);
+    track.style.transform = `translateX(${-offset}px)`;
 
-    nextBtn.addEventListener('click', () => { nextSlide(); resetInterval(); });
-    prevBtn.addEventListener('click', () => { prevSlide(); resetInterval(); });
-    dots.forEach((dot, index) => {
-      dot.addEventListener('click', () => { current = index; showSlide(current); resetInterval(); });
-    });
+    // Actualizar clases
+    cards.forEach((c, i) => c.classList.toggle('center', i === current));
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+  }
 
-    function resetInterval() {
-      clearInterval(interval);
-      interval = setInterval(nextSlide, 4000);
-    }
+  function goTo(index) {
+    current = (index + total) % total;
+    update();
+  }
+
+  function goNext() { goTo(current + 1); }
+  function goPrev() { goTo(current - 1); }
+
+  function resetAuto() {
+    clearInterval(autoInterval);
+    autoInterval = setInterval(goNext, 4000);
+  }
+
+  prevBtn.addEventListener('click', () => { goPrev(); resetAuto(); });
+  nextBtn.addEventListener('click', () => { goNext(); resetAuto(); });
+
+  // Swipe táctil para móvil
+  let startX = 0;
+  track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { diff > 0 ? goNext() : goPrev(); resetAuto(); }
+  });
+
+  window.addEventListener('resize', update);
+  update(); // inicializar
+})();
 
     // Scroll Reveal
     function revealOnScroll() {
