@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Chonita Pibil - Cochinita Pibil Estilo Yucateco</title>
+    <title>Mi Cochinita Pibil - Cochinita Pibil Estilo Yucateco</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -17,10 +17,10 @@
         }
 
         :root {
-            --primary: #C6A15B;
-            --secondary: #9C7A3C;
-            --accent: #6b4423;
-            --light: #FBF3E3;
+            --primary: #C9A227;
+            --secondary: #8A6116;
+            --accent: #5c3d10;
+            --light: #FBF0D6;
             --dark: #241B10;
             --text: #333;
             --green: #52b788;
@@ -36,9 +36,9 @@
 
         /* HEADER */
         header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(120deg, #6b4416 0%, #c9a227 22%, #dbb54e 50%, #c9a227 78%, #6b4416 100%);
             color: white;
-            padding: 15px 0;
+            padding: 18px 0;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -70,8 +70,8 @@
         }
 
         .logo img {
-            width: 45px;
-            height: 45px;
+            width: 68px;
+            height: 68px;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
 
@@ -213,7 +213,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(198, 161, 91, 0.6) 0%, rgba(156, 122, 60, 0.6) 100%);
+            background: linear-gradient(135deg, rgba(198, 161, 91, 0.25) 0%, rgba(156, 122, 60, 0.25) 100%);
             z-index: 1;
         }
 
@@ -1071,8 +1071,8 @@
             }
 
             .logo img {
-                width: 34px;
-                height: 34px;
+                width: 50px;
+                height: 50px;
             }
 
             .cart-btn {
@@ -1483,8 +1483,8 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <img src="./logo.png" alt="Mi Chonita Pibil">
-                    Mi Chonita Pibil
+                    <img src="./logo.png" alt="Mi Cochinita Pibil">
+                    Mi Cochinita Pibil
                 </div>
                 <nav id="nav">
                     <a href="#inicio">Inicio</a>
@@ -1513,13 +1513,11 @@
         <img
             class="hero-gif"
             id="heroGif"
-            src="./fondo.jpg"
-            alt="Cochinita Pibil Mi Chonita Pibil"
+            src="./gif.gif"
+            alt="Cochinita Pibil Mi Cochinita Pibil"
             loading="eager"
         >
         <div class="hero-content">
-            <h1>Bienvenido a Mi Chonita Pibil</h1>
-            <p>Cochinita pibil estilo Yucateco, tradición y sabor en cada bocado</p>
             <div class="hero-buttons">
                 <button class="cta-button" id="verMenuBtn">Ver Menú</button>
                 <a href="https://wa.me/5215561438164" target="_blank" class="cta-button cta-secondary" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">Ordenar por WhatsApp</a>
@@ -1700,7 +1698,7 @@
     <footer>
         <div class="container">
             <div class="footer-content">
-                <p>&copy; 2026 Mi Chonita Pibil. Todos los derechos reservados.</p>
+                <p>&copy; 2026 Mi Cochinita Pibil. Todos los derechos reservados.</p>
                 <p>Cochinita pibil estilo Yucateco, tradición en cada bocado 🐷</p>
                 <div class="social-links">
                     <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
@@ -2228,7 +2226,7 @@
         checkoutBtn.addEventListener('click', () => {
             if (cart.length === 0) return;
 
-            let message = '¡Hola Mi Chonita Pibil! 🐷 Quiero hacer el siguiente pedido:\n\n';
+            let message = '¡Hola Mi Cochinita Pibil! 🐷 Quiero hacer el siguiente pedido:\n\n';
             cart.forEach(c => {
                 message += `• ${c.qty}x ${c.name} — ${c.price}\n`;
             });
