@@ -1500,13 +1500,19 @@
 
     <!-- HERO -->
     <section class="hero" id="inicio">
-        <img
+        <video
             class="hero-gif"
-            id="heroGif"
-            src="./gif.gif"
-            alt="Cochinita Pibil Mi Cochinita Pibil"
-            loading="eager"
-        >
+            id="heroVideo"
+            src="./video.mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+            webkit-playsinline="true"
+            disablepictureinpicture
+            preload="auto"
+            aria-label="Cochinita Pibil Mi Cochinita Pibil"
+        ></video>
         <div class="hero-content">
             <div class="hero-buttons">
                 <button class="cta-button" id="verMenuBtn">Ver Menú</button>
@@ -1749,6 +1755,19 @@
         setHeaderHeightVar();
         window.addEventListener('resize', setHeaderHeightVar);
         window.addEventListener('load', setHeaderHeightVar);
+
+        // ============================================
+        // VIDEO DEL HERO: asegurar autoplay en loop
+        // ============================================
+        const heroVideo = document.getElementById('heroVideo');
+        if (heroVideo) {
+            const playHeroVideo = () => heroVideo.play().catch(() => {});
+            playHeroVideo();
+            heroVideo.addEventListener('ended', playHeroVideo);
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) playHeroVideo();
+            });
+        }
 
         // HAMBURGER MENU
         const hamburger = document.getElementById('hamburger');
