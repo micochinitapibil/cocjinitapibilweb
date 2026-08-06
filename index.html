@@ -43,7 +43,6 @@
             top: 0;
             z-index: 1000;
             box-shadow: 0 8px 32px rgba(156, 122, 60, 0.3);
-            backdrop-filter: blur(10px);
         }
 
         .container {
@@ -204,6 +203,9 @@
             object-fit: cover;
             z-index: 0;
             pointer-events: none;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            contain: layout paint;
         }
 
         .hero::before {
@@ -1504,6 +1506,9 @@
             class="hero-gif"
             id="heroVideo"
             src="./video.mp4"
+            width="1280"
+            height="720"
+            poster="./fondo.jpg"
             autoplay
             muted
             loop
@@ -1511,6 +1516,7 @@
             webkit-playsinline="true"
             disablepictureinpicture
             preload="auto"
+            fetchpriority="high"
             aria-label="Cochinita Pibil Mi Cochinita Pibil"
         ></video>
         <div class="hero-content">
