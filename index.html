@@ -1428,12 +1428,75 @@
             border-top: 1px solid #f0f0f0;
         }
 
-        .cart-total {
+        .delivery-option {
+            margin-bottom: 16px;
+        }
+
+        .delivery-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
             text-align: center;
+        }
+
+        .delivery-toggle {
+            display: flex;
+            gap: 8px;
+        }
+
+        .delivery-btn {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 10px 6px;
+            border: 2px solid #e5ddc8;
+            background: #fff;
+            color: var(--text);
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .delivery-btn i {
+            font-size: 16px;
+        }
+
+        .delivery-btn.active {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            box-shadow: 0 6px 16px rgba(156, 122, 60, 0.3);
+        }
+
+        .cart-total-breakdown {
+            margin-bottom: 14px;
+        }
+
+        .cart-total-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .cart-total-line.grand {
             font-size: 20px;
             font-weight: 900;
             color: var(--dark);
-            margin-bottom: 14px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed #ddd;
         }
 
         .cart-checkout-btn {
@@ -1742,7 +1805,18 @@
                 <!-- generado por JS -->
             </div>
             <div class="cart-footer">
-                <div class="cart-total" id="cartTotal">Total: MX$0.00</div>
+                <div class="delivery-option">
+                    <p class="delivery-label">¿Cómo quieres tu pedido?</p>
+                    <div class="delivery-toggle">
+                        <button type="button" class="delivery-btn active" id="pickupBtn" data-type="pickup">
+                            <i class="fas fa-store"></i> Recoger en el local
+                        </button>
+                        <button type="button" class="delivery-btn" id="deliveryBtn" data-type="delivery">
+                            <i class="fas fa-motorcycle"></i> A domicilio (+MX$15.00)
+                        </button>
+                    </div>
+                </div>
+                <div class="cart-total-breakdown" id="cartTotal"></div>
                 <button class="cart-checkout-btn" id="checkoutBtn">
                     <i class="fab fa-whatsapp"></i> Finalizar por WhatsApp
                 </button>
@@ -2104,8 +2178,10 @@
         // CARRITO DE COMPRAS + PEDIDO POR WHATSAPP
         // ============================================
         const WHATSAPP_NUMBER = '5215561438164'; // 52 (México) + 5561438164
+        const DELIVERY_FEE = 15;
 
         let cart = []; // [{ name, price, qty }] — registro momentáneo (no persiste al recargar)
+        let deliveryType = 'pickup'; // 'pickup' | 'delivery'
         let currentModalItem = null;
 
         const productModalOverlay = document.getElementById('productModalOverlay');
@@ -2123,6 +2199,8 @@
         const cartItemsEl = document.getElementById('cartItems');
         const cartTotalEl = document.getElementById('cartTotal');
         const checkoutBtn = document.getElementById('checkoutBtn');
+        const pickupBtn = document.getElementById('pickupBtn');
+        const deliveryBtn = document.getElementById('deliveryBtn');
 
         function parsePrice(priceStr) {
             return parseFloat(priceStr.replace('MX$', '').replace(',', '')) || 0;
@@ -2192,9 +2270,27 @@
             renderCart();
         }
 
-        function getCartTotal() {
+        function getCartSubtotal() {
             return cart.reduce((sum, c) => sum + parsePrice(c.price) * c.qty, 0);
         }
+
+        function getDeliveryFee() {
+            return deliveryType === 'delivery' ? DELIVERY_FEE : 0;
+        }
+
+        function getCartTotal() {
+            return getCartSubtotal() + getDeliveryFee();
+        }
+
+        function setDeliveryType(type) {
+            deliveryType = type;
+            pickupBtn.classList.toggle('active', type === 'pickup');
+            deliveryBtn.classList.toggle('active', type === 'delivery');
+            renderCart();
+        }
+
+        pickupBtn.addEventListener('click', () => setDeliveryType('pickup'));
+        deliveryBtn.addEventListener('click', () => setDeliveryType('delivery'));
 
         function updateCartBadge() {
             const totalItems = cart.reduce((sum, c) => sum + c.qty, 0);
@@ -2231,7 +2327,16 @@
                     btn.addEventListener('click', () => addOneToCart(btn.dataset.name));
                 });
             }
-            cartTotalEl.textContent = 'Total: ' + formatPrice(getCartTotal());
+
+            const subtotal = getCartSubtotal();
+            const fee = getDeliveryFee();
+            let breakdownHtml = '';
+            if (fee > 0) {
+                breakdownHtml += `<div class="cart-total-line"><span>Subtotal</span><span>${formatPrice(subtotal)}</span></div>`;
+                breakdownHtml += `<div class="cart-total-line"><span>Envío a domicilio</span><span>${formatPrice(fee)}</span></div>`;
+            }
+            breakdownHtml += `<div class="cart-total-line grand"><span>Total</span><span>${formatPrice(getCartTotal())}</span></div>`;
+            cartTotalEl.innerHTML = breakdownHtml;
         }
 
         function openCart() {
@@ -2257,7 +2362,21 @@
             cart.forEach(c => {
                 message += `• ${c.qty}x ${c.name} — ${c.price}\n`;
             });
+
+            const fee = getDeliveryFee();
+            message += deliveryType === 'delivery'
+                ? '\n🛵 Servicio: A domicilio'
+                : '\n🏠 Servicio: Recoger en el local';
+
+            if (fee > 0) {
+                message += `\nSubtotal: ${formatPrice(getCartSubtotal())}`;
+                message += `\nEnvío: ${formatPrice(fee)}`;
+            }
             message += `\nTotal: ${formatPrice(getCartTotal())}`;
+
+            if (deliveryType === 'delivery') {
+                message += '\n\nMi dirección es: ';
+            }
 
             const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
