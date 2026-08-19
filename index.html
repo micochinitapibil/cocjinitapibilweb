@@ -1656,8 +1656,9 @@
                 <button class="filter-btn" data-filter="tradicionales">Tradicionales</button>
                 <button class="filter-btn" data-filter="promociones">Promociones</button>
                 <button class="filter-btn" data-filter="especiales">Especiales</button>
+                <button class="filter-btn" data-filter="antojitos">Antojitos</button>
                 <button class="filter-btn" data-filter="cochipaqs">CochiPaq's</button>
-                <button class="filter-btn" data-filter="aguas">Aguas</button>
+                <button class="filter-btn" data-filter="aguas">Bebidas</button>
                 <button class="filter-btn" data-filter="extras">Extras</button>
             </div>
             <div class="menu-grid" id="menuGrid">
@@ -1858,7 +1859,6 @@
             'Taco de Cochinita Pibil': 'taco-cochinita.jpg',
             'Panucho': 'panucho.jpg',
             'Torta de Cochinita Pibil': 'torta.jpg',
-            'Taco Dorado de Cochinita': 'taco-dorado.jpg',
             'Gordita con Cochinita': 'gordita.jpg',
             'Costra de Queso Rellena': 'costra.jpg',
             'Burrito Pibil': 'burrito.jpg',
@@ -1904,12 +1904,11 @@
         }
         
         const menuItems = [
-            { name: 'Taco de Cochinita Pibil', price: 'MX$33.00', category: 'tradicionales', desc: 'Tortilla de maíz rellena de cochinita pibil, se acompaña con cebollitas y salsa habanero' },
+            { name: 'Taco de Cochinita Pibil', price: 'MX$33.00', category: 'tradicionales', desc: '(Blando, dorado o ahogado)' },
             { name: 'Panucho', price: 'MX$35.00', category: 'tradicionales', desc: 'Cochinita pibil sobre una tortilla de maíz frita rellena de frijol refrito' },
             { name: 'Torta de Cochinita Pibil', price: 'MX$50.00', category: 'tradicionales', desc: 'Pan levemente tostado, acompañado de una cama de frijol opcional y cochinita pibil' },
-            { name: 'Taco Dorado de Cochinita', price: 'MX$33.00', category: 'tradicionales', desc: 'Tortilla de maíz frita, rellena de cochinita pibil' },
             { name: 'Gordita con Cochinita', price: 'MX$40.00', category: 'tradicionales', desc: 'Gordita de maíz frita rellena de cochinita pibil' },
-            { name: 'Costra de Queso Rellena', price: 'MX$55.00', category: 'tradicionales', desc: 'Costra de queso manchego y gouda, rellena de cochinita pibil' },
+            { name: 'Costra de Queso Rellena', price: 'MX$65.00', category: 'tradicionales', desc: 'Costra de queso manchego y gouda, rellena de cochinita pibil' },
             { name: 'Burrito Pibil', price: 'MX$75.00', category: 'tradicionales', desc: 'Tortilla de harina de 30cm rellena de cochinita pibil, junto con frijoles refritos' },
             { name: 'Manita Pibil', price: 'MX$70.00', category: 'tradicionales', desc: 'Manita de puerco acompañada de 4 tortillas sofritas, cebollitas y salsa habanero' },
 
@@ -1924,6 +1923,13 @@
             { name: 'Costilla con Espinazo Pibil', price: 'MX$140.00', category: 'especiales', desc: 'Costillitas con espinazo a la pibil acompañada de tostadas, tortillas sofritas y salsa habanera' },
             { name: 'Paquete Especial', price: 'MX$420.00', category: 'especiales', desc: '1 kilo de cochinita, 12 tostadas rellenas con frijol, tortillas, cebollitas y frijoles refritos' },
 
+            { name: 'Vaporcitos', price: 'MX$30.00', category: 'antojitos', desc: '' },
+            { name: 'Chamorro', price: 'MX$160.00', category: 'antojitos', desc: '' },
+            { name: 'Molletes', price: 'MX$110.00', category: 'antojitos', desc: '' },
+            { name: 'Enchiladas', price: 'MX$120.00', category: 'antojitos', desc: '' },
+            { name: 'Enfrijoladas', price: 'MX$120.00', category: 'antojitos', desc: '' },
+            { name: 'Chilaquiles', price: 'MX$120.00', category: 'antojitos', desc: '' },
+
             { name: 'CochiPaq 1 (250gr)', price: 'MX$99.00', category: 'cochipaqs', desc: '1/4 de cochinita más 3 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos' },
             { name: 'CochiPaq 2 (500gr)', price: 'MX$199.00', category: 'cochipaqs', desc: '1/2 de cochinita más 6 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos' },
             { name: 'CochiPaq 3 (750gr)', price: 'MX$299.00', category: 'cochipaqs', desc: '3/4 de cochinita más 9 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos' },
@@ -1934,11 +1940,18 @@
             { name: '750 gramos de Cochinita', price: 'MX$275.00', category: 'cochipaqs', desc: '750 gr de cochinita acompañados de cebollitas con y sin habanero, salsa habanera y frijoles refritos' },
             { name: '1 kilo de Cochinita', price: 'MX$370.00', category: 'cochipaqs', desc: '1 kg de cochinita acompañados de cebollitas con y sin habanero, salsa habanera y frijoles refritos' },
 
-            { name: 'Agua de Jamaica', price: 'MX$23.00', category: 'aguas', desc: 'Agua de sabor natural de 500 ml' },
-            { name: 'Agua de Maracuyá', price: 'MX$23.00', category: 'aguas', desc: 'Agua de sabor natural de 500 ml' },
-            { name: 'Agua de Horchata', price: 'MX$23.00', category: 'aguas', desc: 'Agua de sabor natural de 500 ml' },
-            { name: 'Agua de Limón con Menta', price: 'MX$23.00', category: 'aguas', desc: 'Agua de sabor natural de 500 ml' },
-            { name: 'Agua de Piña Colada', price: 'MX$23.00', category: 'aguas', desc: 'Agua sabor piña coco de 500 ml' },
+            { name: 'Agua de Jamaica', price: 'MX$30.00', category: 'aguas', desc: 'Agua de sabor natural de 1Lt' },
+            { name: 'Agua de Maracuyá', price: 'MX$30.00', category: 'aguas', desc: 'Agua de sabor natural de 1Lt' },
+            { name: 'Agua de Horchata', price: 'MX$30.00', category: 'aguas', desc: 'Agua de sabor natural de 1Lt' },
+            { name: 'Agua de Limón con Menta', price: 'MX$30.00', category: 'aguas', desc: 'Agua de sabor natural de 1Lt' },
+            { name: 'Agua de Piña Colada', price: 'MX$30.00', category: 'aguas', desc: 'Agua sabor piña coco de 1Lt' },
+            { name: 'Agua de Frutos Rojos', price: 'MX$30.00', category: 'aguas', desc: 'Agua de sabor natural de 1Lt' },
+            { name: 'Coca-Cola 500ml', price: 'MX$30.00', category: 'aguas', desc: '' },
+            { name: 'Coca-Cola PET 600ml', price: 'MX$45.00', category: 'aguas', desc: '' },
+            { name: 'Café Negro o Té', price: 'MX$20.00', category: 'aguas', desc: '' },
+            { name: 'Jugo de Naranja', price: 'MX$30.00', category: 'aguas', desc: '' },
+            { name: 'Atole 500ml', price: 'MX$35.00', category: 'aguas', desc: '' },
+            { name: 'Atole por Litro', price: 'MX$60.00', category: 'aguas', desc: '' },
 
             { name: 'Orden de Tostadas Panucheras', price: 'MX$50.00', category: 'extras', desc: '10 piezas de tostadas panucheras' },
             { name: 'Tostadas Panucheras Adicionales', price: 'MX$10.00', category: 'extras', desc: '2 tostadas de maíz rellenas con frijol refrito' }
