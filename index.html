@@ -1121,6 +1121,246 @@
         /* ================================================
            MODAL DE DETALLE DE PRODUCTO
            ================================================ */
+        /* ============================================
+           MODAL: AVISO DE TIEMPO DE PREPARACIÓN
+        ============================================ */
+        .prep-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(36, 27, 16, 0.65);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 2200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .prep-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .prep-modal {
+            background: white;
+            border-radius: 20px;
+            padding: 32px 26px;
+            max-width: 360px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .prep-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            font-size: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .prep-text {
+            font-size: 15px;
+            color: var(--text);
+            line-height: 1.5;
+            margin-bottom: 22px;
+        }
+
+        .prep-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .prep-no-btn,
+        .prep-yes-btn {
+            flex: 1;
+            padding: 12px 10px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+        }
+
+        .prep-no-btn {
+            background: #f2f2f2;
+            color: var(--text);
+        }
+
+        .prep-yes-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            box-shadow: 0 6px 16px rgba(156, 122, 60, 0.3);
+        }
+
+        /* ============================================
+           MODAL: ADICIONALES ANTES DE FINALIZAR PEDIDO
+        ============================================ */
+        .addons-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(36, 27, 16, 0.65);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 2200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .addons-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .addons-modal {
+            background: white;
+            border-radius: 20px;
+            padding: 26px 22px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .addons-modal h3 {
+            font-size: 19px;
+            color: var(--dark);
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .addons-subtitle {
+            font-size: 13px;
+            color: #888;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .addon-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .addon-item-img {
+            width: 52px;
+            height: 52px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .addon-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .addon-item-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dark);
+            line-height: 1.3;
+        }
+
+        .addon-item-price {
+            font-size: 13px;
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .addon-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .addon-add-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--secondary);
+            font-size: 16px;
+            font-weight: 900;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .addon-remove-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            background: #f2f2f2;
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 900;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .addon-qty-count {
+            font-size: 14px;
+            font-weight: 700;
+            min-width: 16px;
+            text-align: center;
+        }
+
+        .addons-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .addons-skip-btn,
+        .addons-continue-btn {
+            width: 100%;
+            padding: 13px 10px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+        }
+
+        .addons-skip-btn {
+            background: #f2f2f2;
+            color: var(--text);
+        }
+
+        .addons-continue-btn {
+            background: var(--green);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
         .product-modal-overlay {
             position: fixed;
             inset: 0;
@@ -1827,6 +2067,33 @@
         </div>
     </div>
 
+    <!-- MODAL: AVISO DE TIEMPO DE PREPARACIÓN (Antojitos) -->
+    <div class="prep-overlay" id="prepOverlay">
+        <div class="prep-modal">
+            <div class="prep-icon"><i class="fas fa-clock"></i></div>
+            <p class="prep-text">Este producto requiere de 15 a 30 minutos de preparación antes de llegar a tu mesa.</p>
+            <div class="prep-actions">
+                <button class="prep-no-btn" id="prepNoBtn">No, gracias</button>
+                <button class="prep-yes-btn" id="prepYesBtn">Continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADICIONALES ANTES DE FINALIZAR PEDIDO -->
+    <div class="addons-overlay" id="addonsOverlay">
+        <div class="addons-modal">
+            <h3>¿Quieres agregar algo extra? 🌶️</h3>
+            <p class="addons-subtitle">Se suman aparte a tu pedido</p>
+            <div id="addonsList"></div>
+            <div class="addons-actions">
+                <button class="addons-skip-btn" id="addonsSkipBtn">No gracias, continuar</button>
+                <button class="addons-continue-btn" id="addonsContinueBtn">
+                    <i class="fab fa-whatsapp"></i> Finalizar pedido
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ============================================
         // AJUSTAR ALTURA REAL DEL HEADER (para el sticky del menú)
@@ -1951,6 +2218,12 @@
             'Manita a la Pibil Especial': 'manita-especial.jpg',
             'Costilla con Espinazo Pibil': 'costilla.jpg',
             'Paquete Especial': 'paquete-especial2.jpg',
+            'Panuchero': 'panuchero.jpg',
+            'Gordito': 'gordito.jpg',
+            'Vaporcito': 'vaporcito.jpg',
+            'Super Oinc': 'superoinc.jpg',
+            'Superpib': 'superpib.jpg',
+            'Taquero': 'taquero.jpg',
 
             'Vaporcitos': 'vaporcitos.jpg',
             'Chamorro': 'chamorro.jpg',
@@ -2097,13 +2370,14 @@
                     const quickAddBtn = div.querySelector('.quick-add-btn');
                     quickAddBtn.addEventListener('click', (e) => {
                         e.stopPropagation(); // no abrir el modal
-                        addToCart(item);
-                        quickAddBtn.classList.add('added');
-                        quickAddBtn.innerHTML = '<i class="fas fa-check"></i>';
-                        setTimeout(() => {
-                            quickAddBtn.classList.remove('added');
-                            quickAddBtn.innerHTML = '+';
-                        }, 900);
+                        attemptAddToCart(item, () => {
+                            quickAddBtn.classList.add('added');
+                            quickAddBtn.innerHTML = '<i class="fas fa-check"></i>';
+                            setTimeout(() => {
+                                quickAddBtn.classList.remove('added');
+                                quickAddBtn.innerHTML = '+';
+                            }, 900);
+                        });
                     });
 
                     menuGrid.appendChild(div);
@@ -2257,14 +2531,53 @@
 
         modalAddBtn.addEventListener('click', () => {
             if (!currentModalItem) return;
-            addToCart(currentModalItem);
-            modalAddBtn.classList.add('added');
-            modalAddBtn.innerHTML = '¡Agregado! <i class="fas fa-check"></i>';
-            setTimeout(closeProductModal, 550);
+            attemptAddToCart(currentModalItem, () => {
+                modalAddBtn.classList.add('added');
+                modalAddBtn.innerHTML = '¡Agregado! <i class="fas fa-check"></i>';
+                setTimeout(closeProductModal, 550);
+            });
+        });
+
+        // --- CONFIRMACIÓN DE TIEMPO DE PREPARACIÓN (categoría Antojitos) ---
+        const prepOverlay = document.getElementById('prepOverlay');
+        const prepNoBtn = document.getElementById('prepNoBtn');
+        const prepYesBtn = document.getElementById('prepYesBtn');
+        let pendingAddItem = null;
+        let pendingAddCallback = null;
+
+        function attemptAddToCart(item, onAdded) {
+            if (item.category === 'antojitos') {
+                pendingAddItem = item;
+                pendingAddCallback = onAdded;
+                prepOverlay.classList.add('active');
+            } else {
+                actualAddToCart(item);
+                if (onAdded) onAdded();
+            }
+        }
+
+        prepYesBtn.addEventListener('click', () => {
+            prepOverlay.classList.remove('active');
+            if (pendingAddItem) {
+                actualAddToCart(pendingAddItem);
+                if (pendingAddCallback) pendingAddCallback();
+            }
+            pendingAddItem = null;
+            pendingAddCallback = null;
+        });
+
+        prepNoBtn.addEventListener('click', () => {
+            prepOverlay.classList.remove('active');
+            pendingAddItem = null;
+            pendingAddCallback = null;
+        });
+
+        prepOverlay.addEventListener('click', (e) => {
+            if (e.target === prepOverlay) prepNoBtn.click();
         });
 
         // --- LÓGICA DEL CARRITO ---
-        function addToCart(item) {
+        function actualAddToCart(item) {
             const existing = cart.find(c => c.name === item.name);
             if (existing) {
                 existing.qty += 1;
@@ -2378,24 +2691,98 @@
         });
 
         // --- ENVIAR PEDIDO POR WHATSAPP ---
-        checkoutBtn.addEventListener('click', () => {
-            if (cart.length === 0) return;
+        // --- ADICIONALES (toppings extra) ANTES DE FINALIZAR EL PEDIDO ---
+        const ADDONS = [
+            { name: 'Salsa Habanero', price: 25, img: 'salsa.jpg' },
+            { name: 'Cebollitas con Habanero (curtidas con naranja agria y orégano)', price: 25, img: 'cebollitasconabanero.jpg' },
+            { name: 'Cebollitas con Limón y Orégano', price: 25, img: 'cebollitassinbananero.jpg' },
+            { name: 'Frijoles Refritos', price: 30, img: 'frijoles.jpg' }
+        ];
+        let addonQuantities = {}; // nombre -> cantidad
 
+        const addonsOverlay = document.getElementById('addonsOverlay');
+        const addonsList = document.getElementById('addonsList');
+        const addonsSkipBtn = document.getElementById('addonsSkipBtn');
+        const addonsContinueBtn = document.getElementById('addonsContinueBtn');
+
+        function renderAddons() {
+            addonsList.innerHTML = ADDONS.map(a => {
+                const qty = addonQuantities[a.name] || 0;
+                const safeName = a.name.replace(/"/g, '&quot;');
+                return `
+                    <div class="addon-item">
+                        <img class="addon-item-img" src="./${a.img}" alt="${a.name}">
+                        <div class="addon-item-info">
+                            <div class="addon-item-name">${a.name}</div>
+                            <div class="addon-item-price">${formatPrice(a.price)}</div>
+                        </div>
+                        <div class="addon-item-controls">
+                            ${qty > 0 ? `<button class="addon-remove-btn" data-name="${safeName}">−</button>
+                            <span class="addon-qty-count">${qty}</span>` : ''}
+                            <button class="addon-add-btn" data-name="${safeName}">+</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            addonsList.querySelectorAll('.addon-add-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const name = btn.dataset.name;
+                    addonQuantities[name] = (addonQuantities[name] || 0) + 1;
+                    renderAddons();
+                });
+            });
+            addonsList.querySelectorAll('.addon-remove-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const name = btn.dataset.name;
+                    addonQuantities[name] = Math.max(0, (addonQuantities[name] || 0) - 1);
+                    renderAddons();
+                });
+            });
+        }
+
+        function openAddonsModal() {
+            addonQuantities = {};
+            renderAddons();
+            addonsOverlay.classList.add('active');
+        }
+
+        function closeAddonsModal() {
+            addonsOverlay.classList.remove('active');
+        }
+
+        addonsOverlay.addEventListener('click', (e) => {
+            if (e.target === addonsOverlay) closeAddonsModal();
+        });
+
+        function sendWhatsAppOrder() {
             let message = '¡Hola Mi Cochinita Pibil! 🐷 Quiero hacer el siguiente pedido:\n\n';
             cart.forEach(c => {
                 message += `• ${c.qty}x ${c.name} — ${c.price}\n`;
             });
+
+            const addonsChosen = ADDONS.filter(a => (addonQuantities[a.name] || 0) > 0);
+            let addonsTotal = 0;
+            if (addonsChosen.length > 0) {
+                message += '\n➕ Adicionales:\n';
+                addonsChosen.forEach(a => {
+                    const qty = addonQuantities[a.name];
+                    addonsTotal += a.price * qty;
+                    message += `• ${qty}x ${a.name} — ${formatPrice(a.price)}\n`;
+                });
+            }
 
             const fee = getDeliveryFee();
             message += deliveryType === 'delivery'
                 ? '\n🛵 Servicio: A domicilio'
                 : '\n🏠 Servicio: Recoger en el local';
 
-            if (fee > 0) {
+            if (fee > 0 || addonsTotal > 0) {
                 message += `\nSubtotal: ${formatPrice(getCartSubtotal())}`;
-                message += `\nEnvío: ${formatPrice(fee)}`;
+                if (addonsTotal > 0) message += `\nAdicionales: ${formatPrice(addonsTotal)}`;
+                if (fee > 0) message += `\nEnvío: ${formatPrice(fee)}`;
             }
-            message += `\nTotal: ${formatPrice(getCartTotal())}`;
+            message += `\nTotal: ${formatPrice(getCartTotal() + addonsTotal)}`;
 
             if (deliveryType === 'delivery') {
                 message += '\n\nMi dirección es: ';
@@ -2403,6 +2790,22 @@
 
             const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
+        }
+
+        addonsSkipBtn.addEventListener('click', () => {
+            addonQuantities = {};
+            closeAddonsModal();
+            sendWhatsAppOrder();
+        });
+
+        addonsContinueBtn.addEventListener('click', () => {
+            closeAddonsModal();
+            sendWhatsAppOrder();
+        });
+
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length === 0) return;
+            openAddonsModal();
         });
     </script>
 </body>
