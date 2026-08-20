@@ -2256,7 +2256,11 @@
             'Atole por Litro': 'atoleporlitro.jpg',
 
             'Orden de Tostadas Panucheras': 'tostadas-panucheras.jpg',
-            'Tostadas Panucheras Adicionales': 'tostadas-extra.jpg'
+            'Tostadas Panucheras Adicionales': 'tostadas-extra.jpg',
+            'Salsa Habanero': 'salsa.jpg',
+            'Cebollitas con Habanero': 'cebollitasconabanero.jpg',
+            'Cebollitas con Limón y Orégano': 'cebollitassinabanero.jpg',
+            'Frijoles Refritos': 'frijoles.jpg'
         };
         
         function getProductImage(productName) {
@@ -2283,7 +2287,7 @@
             { name: 'Dúo de Gorditas', price: 'MX$60.00', category: 'promociones', desc: '2 gorditas de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa' },
             { name: 'Dúo de Tortas Pibil', price: 'MX$90.00', category: 'promociones', desc: '2 tortas de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa' },
 
-            { name: 'Paquete Especial', price: 'MX$420.00', category: 'especiales', desc: '1 kilo de cochinita, 12 tostadas rellenas con frijol, tortillas, cebollitas y frijoles refritos' },
+            { name: 'Paquete Especial', price: 'MX$420.00', category: 'cochipaqs', desc: '1 kilo de cochinita, 12 tostadas rellenas con frijol, tortillas, cebollitas y frijoles refritos' },
             { name: 'Panuchero', price: 'MX$125.00', category: 'especiales', desc: '3 Panuchos + Bebida' },
             { name: 'Gordito', price: 'MX$115.00', category: 'especiales', desc: 'Torta + Gordita + Bebida' },
             { name: 'Vaporcito', price: 'MX$80.00', category: 'especiales', desc: '2 Tamales + Bebida' },
@@ -2324,7 +2328,11 @@
             { name: 'Atole por Litro', price: 'MX$60.00', category: 'aguas', desc: '' },
 
             { name: 'Orden de Tostadas Panucheras', price: 'MX$50.00', category: 'extras', desc: '10 piezas de tostadas panucheras' },
-            { name: 'Tostadas Panucheras Adicionales', price: 'MX$10.00', category: 'extras', desc: '2 tostadas de maíz rellenas con frijol refrito' }
+            { name: 'Tostadas Panucheras Adicionales', price: 'MX$10.00', category: 'extras', desc: '2 tostadas de maíz rellenas con frijol refrito' },
+            { name: 'Salsa Habanero', price: 'MX$25.00', category: 'extras', desc: '' },
+            { name: 'Cebollitas con Habanero', price: 'MX$25.00', category: 'extras', desc: 'Curtidas con naranja agria y orégano' },
+            { name: 'Cebollitas con Limón y Orégano', price: 'MX$25.00', category: 'extras', desc: '' },
+            { name: 'Frijoles Refritos', price: 'MX$30.00', category: 'extras', desc: '' }
         ];
 
         const menuGrid = document.getElementById('menuGrid');
@@ -2696,7 +2704,9 @@
             { name: 'Salsa Habanero', price: 25, img: 'salsa.jpg' },
             { name: 'Cebollitas con Habanero (curtidas con naranja agria y orégano)', price: 25, img: 'cebollitasconabanero.jpg' },
             { name: 'Cebollitas con Limón y Orégano', price: 25, img: 'cebollitassinabanero.jpg' },
-            { name: 'Frijoles Refritos', price: 30, img: 'frijoles.jpg' }
+            { name: 'Frijoles Refritos', price: 30, img: 'frijoles.jpg' },
+            { name: 'Orden de Tostadas Panucheras (10 piezas)', price: 50, img: 'tostadas-panucheras.jpg' },
+            { name: 'Tostadas Panucheras Adicionales (2 piezas)', price: 10, img: 'tostadas-extra.jpg' }
         ];
         let addonQuantities = {}; // nombre -> cantidad
 
