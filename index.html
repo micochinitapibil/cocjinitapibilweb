@@ -1771,6 +1771,9 @@
             transform: none;
         }
     </style>
+    <!-- Firebase (CDN, compat SDK - vanilla JS, sin npm) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <!-- HEADER -->
@@ -2096,6 +2099,20 @@
 
     <script>
         // ============================================
+        // FIREBASE — menú en vivo desde Firestore
+        // ============================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyA3D1_bBKQJS2XQa_H0iSyJQ-xl51cj_0Q",
+            authDomain: "cochinita-pibil-admin.firebaseapp.com",
+            projectId: "cochinita-pibil-admin",
+            storageBucket: "cochinita-pibil-admin.firebasestorage.app",
+            messagingSenderId: "329969528973",
+            appId: "1:329969528973:web:d7c60b4243f1ce5c9432c4"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // ============================================
         // AJUSTAR ALTURA REAL DEL HEADER (para el sticky del menú)
         // ============================================
         function setHeaderHeightVar() {
@@ -2198,7 +2215,9 @@
         // MAPEO DE IMÁGENES DE PRODUCTOS
         // ============================================
         const IMAGE_BASE_URL = './';
-        
+
+        // Mapa de imágenes de respaldo (por si algún producto en Firestore
+        // no trae imagen configurada). Se sigue usando como fallback.
         const productImageMap = {
             'Taco de Cochinita Pibil': 'taco-cochinita.jpg',
             'Panucho': 'panucho.jpg',
@@ -2263,77 +2282,24 @@
             'Frijoles Refritos': 'frijoles.jpg'
         };
         
+        // Mapa dinámico: nombre de producto -> URL de imagen, se llena
+        // con lo que venga de Firestore (github o cloudinary) para cada producto.
+        let liveImageMap = {};
+
         function getProductImage(productName) {
+            const liveUrl = liveImageMap[productName];
+            if (liveUrl) return liveUrl;
             const imageFile = productImageMap[productName];
             if (imageFile) {
                 return IMAGE_BASE_URL + imageFile;
             }
             return 'https://via.placeholder.com/300x300?text=' + encodeURIComponent(productName);
         }
-        
-        const menuItems = [
-            { name: 'Taco de Cochinita Pibil', price: 'MX$33.00', category: 'tradicionales', desc: '(Blando, dorado o ahogado)' },
-            { name: 'Panucho', price: 'MX$35.00', category: 'tradicionales', desc: 'Cochinita pibil sobre una tortilla de maíz frita rellena de frijol refrito' },
-            { name: 'Torta de Cochinita Pibil', price: 'MX$50.00', category: 'tradicionales', desc: 'Pan levemente tostado, acompañado de una cama de frijol opcional y cochinita pibil' },
-            { name: 'Gordita con Cochinita', price: 'MX$40.00', category: 'tradicionales', desc: 'Gordita de maíz frita rellena de cochinita pibil' },
-            { name: 'Costra de Queso Rellena', price: 'MX$65.00', category: 'tradicionales', desc: 'Costra de queso manchego y gouda, rellena de cochinita pibil' },
-            { name: 'Burrito Pibil', price: 'MX$75.00', category: 'tradicionales', desc: 'Tortilla de harina de 30cm rellena de cochinita pibil, junto con frijoles refritos' },
-            { name: 'Manita Pibil', price: 'MX$70.00', category: 'tradicionales', desc: 'Manita de puerco acompañada de 4 tortillas sofritas, cebollitas y salsa habanero' },
-            { name: 'Quesadilla Pibil', price: 'MX$45.00', category: 'tradicionales', desc: '' },
 
-            { name: 'Orden de Tacos (Blando, Dorado o Ahogado)', price: 'MX$90.00', category: 'promociones', desc: '3 tacos de cochinita pibil a elegir entre blando, dorado o ahogado, se acompañan de cebollitas curtidas con habanero y salsa' },
-            { name: 'Orden de Panuchos', price: 'MX$100.00', category: 'promociones', desc: '3 panuchos de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa' },
-            { name: 'Burritos Cuates', price: 'MX$120.00', category: 'promociones', desc: '2 burritos de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa' },
-            { name: 'Dúo de Gorditas', price: 'MX$60.00', category: 'promociones', desc: '2 gorditas de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa' },
-            { name: 'Dúo de Tortas Pibil', price: 'MX$90.00', category: 'promociones', desc: '2 tortas de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa' },
-
-            { name: 'Paquete Especial', price: 'MX$420.00', category: 'cochipaqs', desc: '1 kilo de cochinita, 12 tostadas rellenas con frijol, tortillas, cebollitas y frijoles refritos' },
-            { name: 'Panuchero', price: 'MX$125.00', category: 'especiales', desc: '3 Panuchos + Bebida' },
-            { name: 'Gordito', price: 'MX$115.00', category: 'especiales', desc: 'Torta + Gordita + Bebida' },
-            { name: 'Vaporcito', price: 'MX$80.00', category: 'especiales', desc: '2 Tamales + Bebida' },
-            { name: 'Super Oinc', price: 'MX$150.00', category: 'especiales', desc: 'Torta + Panucho + Gordita + Bebida' },
-            { name: 'Superpib', price: 'MX$130.00', category: 'especiales', desc: 'Burrito + Panucho + Bebida' },
-            { name: 'Taquero', price: 'MX$120.00', category: 'especiales', desc: '3 Tacos + Bebida' },
-
-            { name: 'Manita a la Pibil Especial', price: 'MX$120.00', category: 'antojitos', desc: 'Manita a la pibil acompañada de cochinita y 3 tostadas rellenas de frijol refrito' },
-            { name: 'Costilla con Espinazo Pibil', price: 'MX$140.00', category: 'antojitos', desc: 'Costillitas con espinazo a la pibil acompañada de tostadas, tortillas sofritas y salsa habanera' },
-            { name: 'Vaporcitos', price: 'MX$30.00', category: 'antojitos', desc: '' },
-            { name: 'Chamorro', price: 'MX$160.00', category: 'antojitos', desc: '' },
-            { name: 'Molletes', price: 'MX$110.00', category: 'antojitos', desc: '' },
-            { name: 'Enchiladas', price: 'MX$120.00', category: 'antojitos', desc: '' },
-            { name: 'Enfrijoladas', price: 'MX$120.00', category: 'antojitos', desc: '' },
-            { name: 'Chilaquiles', price: 'MX$120.00', category: 'antojitos', desc: '' },
-
-            { name: 'CochiPaq 1 (250gr)', price: 'MX$99.00', category: 'cochipaqs', desc: '1/4 de cochinita más 3 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos' },
-            { name: 'CochiPaq 2 (500gr)', price: 'MX$199.00', category: 'cochipaqs', desc: '1/2 de cochinita más 6 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos' },
-            { name: 'CochiPaq 3 (750gr)', price: 'MX$299.00', category: 'cochipaqs', desc: '3/4 de cochinita más 9 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos' },
-            { name: 'CochiPaq 4 (1kg)', price: 'MX$399.00', category: 'cochipaqs', desc: '1 kilo de cochinita más 12 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos' },
-            { name: 'CochiPaq 5 (1.5kg)', price: 'MX$590.00', category: 'cochipaqs', desc: '1.5 kilos de cochinita más 18 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos' },
-            { name: 'CochiPaq 6 (2kg)', price: 'MX$790.00', category: 'cochipaqs', desc: '2 kilos de cochinita más 25 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos' },
-            { name: '500 gramos de Cochinita', price: 'MX$185.00', category: 'cochipaqs', desc: '500 gr de cochinita acompañados de cebollitas con y sin habanero, salsa habanera y frijoles refritos' },
-            { name: '750 gramos de Cochinita', price: 'MX$275.00', category: 'cochipaqs', desc: '750 gr de cochinita acompañados de cebollitas con y sin habanero, salsa habanera y frijoles refritos' },
-            { name: '1 kilo de Cochinita', price: 'MX$370.00', category: 'cochipaqs', desc: '1 kg de cochinita acompañados de cebollitas con y sin habanero, salsa habanera y frijoles refritos' },
-
-            { name: 'Agua de Jamaica', price: 'MX$30.00', category: 'aguas', desc: 'Agua de sabor natural de 1Lt' },
-            { name: 'Agua de Maracuyá', price: 'MX$30.00', category: 'aguas', desc: 'Agua de sabor natural de 1Lt' },
-            { name: 'Agua de Horchata', price: 'MX$30.00', category: 'aguas', desc: 'Agua de sabor natural de 1Lt' },
-            { name: 'Agua de Limón con Menta', price: 'MX$30.00', category: 'aguas', desc: 'Agua de sabor natural de 1Lt' },
-            { name: 'Agua de Piña Colada', price: 'MX$30.00', category: 'aguas', desc: 'Agua sabor piña coco de 1Lt' },
-            { name: 'Agua de Frutos Rojos', price: 'MX$30.00', category: 'aguas', desc: 'Agua de sabor natural de 1Lt' },
-            { name: 'Coca-Cola 500ml', price: 'MX$30.00', category: 'aguas', desc: '' },
-            { name: 'Coca-Cola PET 600ml', price: 'MX$45.00', category: 'aguas', desc: '' },
-            { name: 'Café Negro o Té', price: 'MX$20.00', category: 'aguas', desc: '' },
-            { name: 'Jugo de Naranja', price: 'MX$30.00', category: 'aguas', desc: '' },
-            { name: 'Atole 500ml', price: 'MX$35.00', category: 'aguas', desc: '' },
-            { name: 'Atole por Litro', price: 'MX$60.00', category: 'aguas', desc: '' },
-
-            { name: 'Orden de Tostadas Panucheras', price: 'MX$50.00', category: 'extras', desc: '10 piezas de tostadas panucheras' },
-            { name: 'Tostadas Panucheras Adicionales', price: 'MX$10.00', category: 'extras', desc: '2 tostadas de maíz rellenas con frijol refrito' },
-            { name: 'Salsa Habanero', price: 'MX$25.00', category: 'extras', desc: '' },
-            { name: 'Cebollitas con Habanero', price: 'MX$25.00', category: 'extras', desc: 'Curtidas con naranja agria y orégano' },
-            { name: 'Cebollitas con Limón y Orégano', price: 'MX$25.00', category: 'extras', desc: '' },
-            { name: 'Frijoles Refritos', price: 'MX$30.00', category: 'extras', desc: '' }
-        ];
+        // El menú ya NO es un array fijo: se llena en vivo desde Firestore
+        // (colección "productos"), mostrando solo los productos con active=true.
+        let menuItems = [];
+        let menuLoaded = false;
 
         const menuGrid = document.getElementById('menuGrid');
 
@@ -2397,7 +2363,41 @@
             });
         }
 
-        renderMenu();
+        let currentFilter = 'todos';
+
+        // Muestra un mensaje mientras carga el menú por primera vez
+        menuGrid.innerHTML = '<p style="padding: 30px; text-align:center; color:#999;">Cargando menú...</p>';
+
+        // Escucha la colección "productos" en tiempo real: si el admin
+        // agrega, edita, apaga o borra algo, esta página se actualiza sola
+        // sin necesidad de recargar.
+        db.collection('productos')
+            .where('active', '==', true)
+            .orderBy('order', 'asc')
+            .onSnapshot(function(snapshot) {
+                menuItems = [];
+                liveImageMap = {};
+                snapshot.forEach(function(doc) {
+                    const data = doc.data();
+                    const priceStr = 'MX$' + Number(data.price).toFixed(2);
+                    menuItems.push({
+                        name: data.name,
+                        price: priceStr,
+                        category: data.category,
+                        desc: data.desc || ''
+                    });
+                    if (data.imageSource === 'cloudinary' && data.imageValue) {
+                        liveImageMap[data.name] = data.imageValue;
+                    } else if (data.imageValue) {
+                        liveImageMap[data.name] = IMAGE_BASE_URL + data.imageValue;
+                    }
+                });
+                menuLoaded = true;
+                renderMenu(currentFilter);
+            }, function(err) {
+                console.error('Error cargando el menú:', err);
+                menuGrid.innerHTML = '<p style="padding: 30px; text-align:center; color:#c0392b;">No se pudo cargar el menú. Intenta recargar la página.</p>';
+            });
 
         document.getElementById('img-taco').src = './seleccion%20de%20la%20mejor%20carne.jpg';
         document.getElementById('img-panucho').src = './panucho.jpg';
@@ -2426,7 +2426,8 @@
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                renderMenu(this.dataset.filter);
+                currentFilter = this.dataset.filter;
+                renderMenu(currentFilter);
                 scrollToMenuTop();
             });
         });
