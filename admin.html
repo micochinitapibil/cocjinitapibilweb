@@ -119,11 +119,11 @@
     .card {
         background: #fff;
         border-radius: 14px;
-        padding: 20px;
+        padding: 22px;
         margin-bottom: 20px;
         box-shadow: 0 2px 14px rgba(0,0,0,.06);
     }
-    .card h3 { color: var(--accent); font-size: 16px; margin-bottom: 14px; }
+    .card h3 { color: var(--accent); font-size: 16px; margin-bottom: 16px; }
 
     #migrateBox {
         background: #fff8e1;
@@ -187,32 +187,41 @@
     /* Lista de productos */
     .product-item {
         display: flex;
-        gap: 12px;
-        padding: 14px 0;
+        gap: 14px;
+        padding: 16px 4px;
         border-bottom: 1px solid #f0e9d6;
         align-items: center;
     }
     .product-item:last-child { border-bottom: none; }
     .product-item img {
-        width: 56px; height: 56px; border-radius: 8px; object-fit: cover;
+        width: 60px; height: 60px; border-radius: 10px; object-fit: cover;
         background: #eee; flex-shrink: 0;
     }
-    .product-item .info { flex: 1; min-width: 0; }
-    .product-item .info .name { font-weight: 700; font-size: 14px; color: var(--dark); }
-    .product-item .info .meta { font-size: 12px; color: #999; }
-    .product-item .info .name.inactive { text-decoration: line-through; color: #bbb; }
-    .product-actions { display: flex; align-items: center; gap: 10px; }
-    .icon-btn {
-        background: none; border: none; cursor: pointer; font-size: 16px;
-        color: var(--secondary); padding: 6px;
+    .product-item .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+    .product-item .info .name {
+        font-weight: 700; font-size: 14px; color: var(--dark);
+        line-height: 1.35;
     }
+    .product-item .info .meta { font-size: 13px; color: var(--secondary); font-weight: 600; }
+    .product-item .info .name.inactive { text-decoration: line-through; color: #bbb; }
+    .product-actions {
+        display: flex; flex-direction: column; align-items: center; gap: 8px;
+        flex-shrink: 0;
+    }
+    .product-actions-icons { display: flex; gap: 6px; }
+    .icon-btn {
+        background: none; border: none; cursor: pointer; font-size: 15px;
+        color: var(--secondary); padding: 8px; border-radius: 6px;
+    }
+    .icon-btn:active { background: #f0e9d6; }
     .icon-btn.del { color: var(--red); }
 
     .category-group h4 {
         font-size: 13px; text-transform: uppercase; letter-spacing: .5px;
-        color: var(--primary); margin: 18px 0 4px; border-bottom: 2px solid var(--light);
-        padding-bottom: 6px;
+        color: var(--primary); margin: 24px 0 6px; border-bottom: 2px solid var(--light);
+        padding-bottom: 8px;
     }
+    .category-group:first-child h4 { margin-top: 4px; }
 
     #toast {
         position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
@@ -492,8 +501,10 @@
                     <input type="checkbox" ${p.active ? 'checked' : ''} data-id="${p.id}" class="toggleActive">
                     <span class="slider"></span>
                 </label>
-                <button class="icon-btn edit" data-id="${p.id}"><i class="fas fa-pen"></i></button>
-                <button class="icon-btn del" data-id="${p.id}"><i class="fas fa-trash"></i></button>
+                <div class="product-actions-icons">
+                    <button class="icon-btn edit" data-id="${p.id}"><i class="fas fa-pen"></i></button>
+                    <button class="icon-btn del" data-id="${p.id}"><i class="fas fa-trash"></i></button>
+                </div>
             </div>
         `;
         row.querySelector('.toggleActive').addEventListener('change', (e) => {
