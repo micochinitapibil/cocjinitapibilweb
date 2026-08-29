@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Cochinita Pibil</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Firebase (CDN, compat SDK - vanilla JS, sin npm) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<style>
+    :root {
+        --primary: #C9A227;
+        --secondary: #8A6116;
+        --accent: #5c3d10;
+        --light: #FBF0D6;
+        --dark: #241B10;
+        --text: #333;
+        --green: #52b788;
+        --red: #c0392b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        font-family: 'Poppins', 'Segoe UI', sans-serif;
+        background: var(--light);
+        color: var(--text);
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+    header {
+        background: var(--dark);
+        color: var(--light);
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+    }
+    header h1 { font-size: 18px; font-weight: 800; color: var(--primary); }
+    header .sub { font-size: 12px; opacity: .7; }
+    #logoutBtn {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+    /* ---------- LOGIN ---------- */
+    #loginScreen {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    .login-box {
+        background: #fff;
+        border-radius: 16px;
+        padding: 36px 28px;
+        max-width: 380px;
+        width: 100%;
+        box-shadow: 0 10px 40px rgba(0,0,0,.12);
+        border-top: 6px solid var(--primary);
+    }
+    .login-box h2 { font-size: 22px; margin-bottom: 6px; color: var(--dark); }
+    .login-box p { font-size: 13px; color: #888; margin-bottom: 24px; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--accent); }
+    .field input, .field select, .field textarea {
+        width: 100%;
+        padding: 12px 14px;
+        border: 2px solid #e5ddc8;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 15px;
+        background: #fffdf7;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+    .btn {
+        display: inline-block;
+        border: none;
+        border-radius: 8px;
+        padding: 13px 20px;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: transform .1s ease;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--primary); color: var(--dark); width: 100%; }
+    .btn-green { background: var(--green); color: #fff; }
+    .btn-red { background: var(--red); color: #fff; }
+    .btn-outline { background: transparent; border: 2px solid var(--secondary); color: var(--secondary); }
+    #loginError {
+        color: var(--red);
+        font-size: 13px;
+        margin-top: 12px;
+        display: none;
+        font-weight: 600;
+    }
+
+    /* ---------- APP ---------- */
+    #appScreen { display: none; padding: 20px; max-width: 800px; margin: 0 auto; }
+
+    .card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 14px rgba(0,0,0,.06);
+    }
+    .card h3 { color: var(--accent); font-size: 16px; margin-bottom: 14px; }
+
+    #migrateBox {
+        background: #fff8e1;
+        border: 2px dashed var(--primary);
+    }
+    #migrateBox p { font-size: 13px; color: var(--accent); margin-bottom: 12px; }
+
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .image-toggle { display: flex; gap: 8px; margin-bottom: 10px; }
+    .image-toggle button {
+        flex: 1;
+        padding: 10px;
+        border: 2px solid var(--primary);
+        background: #fff;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 12px;
+        cursor: pointer;
+        color: var(--accent);
+    }
+    .image-toggle button.active-src { background: var(--primary); color: var(--dark); }
+    .image-preview {
+        max-width: 90px;
+        max-height: 90px;
+        border-radius: 8px;
+        margin-top: 10px;
+        border: 2px solid #eee;
+        object-fit: cover;
+        display: none;
+    }
+    #uploadStatus { font-size: 12px; margin-top: 6px; color: var(--secondary); }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 46px;
+        height: 26px;
+        flex-shrink: 0;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+        position: absolute; cursor: pointer; inset: 0;
+        background: #ccc; border-radius: 26px; transition: .2s;
+    }
+    .slider:before {
+        position: absolute; content: "";
+        height: 20px; width: 20px; left: 3px; bottom: 3px;
+        background: white; border-radius: 50%; transition: .2s;
+    }
+    .switch input:checked + .slider { background: var(--green); }
+    .switch input:checked + .slider:before { transform: translateX(20px); }
+
+    /* Filtro / búsqueda */
+    #searchProd {
+        width: 100%; padding: 12px 14px; border: 2px solid #e5ddc8;
+        border-radius: 8px; font-family: inherit; font-size: 14px; margin-bottom: 14px;
+    }
+    #countInfo { font-size: 12px; color: #999; margin-bottom: 10px; }
+
+    /* Lista de productos */
+    .product-item {
+        display: flex;
+        gap: 12px;
+        padding: 14px 0;
+        border-bottom: 1px solid #f0e9d6;
+        align-items: center;
+    }
+    .product-item:last-child { border-bottom: none; }
+    .product-item img {
+        width: 56px; height: 56px; border-radius: 8px; object-fit: cover;
+        background: #eee; flex-shrink: 0;
+    }
+    .product-item .info { flex: 1; min-width: 0; }
+    .product-item .info .name { font-weight: 700; font-size: 14px; color: var(--dark); }
+    .product-item .info .meta { font-size: 12px; color: #999; }
+    .product-item .info .name.inactive { text-decoration: line-through; color: #bbb; }
+    .product-actions { display: flex; align-items: center; gap: 10px; }
+    .icon-btn {
+        background: none; border: none; cursor: pointer; font-size: 16px;
+        color: var(--secondary); padding: 6px;
+    }
+    .icon-btn.del { color: var(--red); }
+
+    .category-group h4 {
+        font-size: 13px; text-transform: uppercase; letter-spacing: .5px;
+        color: var(--primary); margin: 18px 0 4px; border-bottom: 2px solid var(--light);
+        padding-bottom: 6px;
+    }
+
+    #toast {
+        position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+        background: var(--dark); color: #fff; padding: 12px 22px; border-radius: 30px;
+        font-size: 13px; font-weight: 600; opacity: 0; pointer-events: none; transition: opacity .3s;
+        z-index: 200; box-shadow: 0 4px 20px rgba(0,0,0,.2);
+    }
+    #toast.show { opacity: 1; }
+
+    /* Modal editar/agregar */
+    #productModal {
+        display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5);
+        z-index: 100; align-items: flex-start; justify-content: center;
+        overflow-y: auto; padding: 20px 14px;
+    }
+    #productModal .modal-box {
+        background: #fff; border-radius: 14px; padding: 22px; max-width: 460px;
+        width: 100%; margin-top: 20px;
+    }
+    #productModal .modal-box h3 { color: var(--accent); margin-bottom: 16px; }
+    .modal-footer { display: flex; gap: 10px; margin-top: 18px; }
+    .modal-footer .btn { flex: 1; }
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="loginScreen">
+    <div class="login-box">
+        <h2>🐷 Cochinita Pibil</h2>
+        <p>Panel de administración — inicia sesión con tu correo</p>
+        <div class="field">
+            <label>Correo electrónico</label>
+            <input type="email" id="loginEmail" placeholder="tucorreo@ejemplo.com" autocomplete="username">
+        </div>
+        <div class="field">
+            <label>Contraseña</label>
+            <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <button class="btn btn-primary" id="loginBtn">Entrar</button>
+        <div id="loginError"></div>
+    </div>
+</div>
+
+<!-- ============ APP (después de login) ============ -->
+<div id="appScreen">
+    <header>
+        <div>
+            <h1>Panel de Productos</h1>
+            <div class="sub" id="userEmailLabel"></div>
+        </div>
+        <button id="logoutBtn">Salir</button>
+    </header>
+
+    <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
+
+        <!-- Migración inicial -->
+        <div class="card" id="migrateBox" style="display:none;">
+            <h3>📦 Migrar menú original</h3>
+            <p>No se encontraron productos en la base de datos. Puedes cargar tus 51 productos originales de un solo clic (no se van a duplicar si lo corres dos veces).</p>
+            <button class="btn btn-green" id="migrateBtn">Migrar productos originales</button>
+        </div>
+
+        <!-- Agregar producto -->
+        <div class="card">
+            <h3>➕ Agregar producto nuevo</h3>
+            <button class="btn btn-outline" id="openAddModalBtn" style="width:100%;">Agregar producto</button>
+        </div>
+
+        <!-- Lista -->
+        <div class="card">
+            <h3>📋 Productos (<span id="totalCount">0</span>)</h3>
+            <input type="text" id="searchProd" placeholder="Buscar producto...">
+            <div id="countInfo"></div>
+            <div id="productListWrap"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ============ MODAL agregar / editar ============ -->
+<div id="productModal">
+    <div class="modal-box">
+        <h3 id="modalTitle">Agregar producto</h3>
+
+        <div class="field">
+            <label>Nombre *</label>
+            <input type="text" id="f_name">
+        </div>
+
+        <div class="row2">
+            <div class="field">
+                <label>Precio (MXN) *</label>
+                <input type="number" id="f_price" step="0.01">
+            </div>
+            <div class="field">
+                <label>Categoría *</label>
+                <select id="f_category">
+                    <option value="tradicionales">Tradicionales</option>
+                    <option value="promociones">Promociones</option>
+                    <option value="especiales">Especiales</option>
+                    <option value="antojitos">Antojitos</option>
+                    <option value="cochipaqs">CochiPaqs</option>
+                    <option value="aguas">Bebidas</option>
+                    <option value="extras">Extras</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Descripción</label>
+            <textarea id="f_desc" rows="2"></textarea>
+        </div>
+
+        <div class="field">
+            <label>Imagen</label>
+            <div class="image-toggle">
+                <button type="button" id="srcGithubBtn" class="active-src">Nombre de archivo (GitHub)</button>
+                <button type="button" id="srcCloudinaryBtn">Subir foto (Cloudinary)</button>
+            </div>
+            <input type="text" id="f_image_github" placeholder="ejemplo: taco-cochinita.jpg">
+            <input type="file" id="f_image_file" accept="image/*" style="display:none;">
+            <div id="uploadStatus"></div>
+            <img id="imagePreview" class="image-preview">
+        </div>
+
+        <div class="field" style="display:flex; align-items:center; gap:10px;">
+            <label class="switch">
+                <input type="checkbox" id="f_active" checked>
+                <span class="slider"></span>
+            </label>
+            <span style="font-size:13px; font-weight:600;">Producto activo (visible en el menú)</span>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancelModalBtn">Cancelar</button>
+            <button class="btn btn-green" id="saveProductBtn">Guardar</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+    // ==================================================
+    // CONFIGURACIÓN — Firebase + Cloudinary
+    // ==================================================
+    const firebaseConfig = {
+        apiKey: "AIzaSyA3D1_bBKQJS2XQa_H0iSyJQ-xl51cj_0Q",
+        authDomain: "cochinita-pibil-admin.firebaseapp.com",
+        projectId: "cochinita-pibil-admin",
+        storageBucket: "cochinita-pibil-admin.firebasestorage.app",
+        messagingSenderId: "329969528973",
+        appId: "1:329969528973:web:d7c60b4243f1ce5c9432c4"
+    };
+    const CLOUDINARY_CLOUD_NAME = "e1rxzjqg";
+    const CLOUDINARY_UPLOAD_PRESET = "cochinita_unsigned";
+    const IMAGE_BASE_URL = "./"; // misma carpeta raíz que index.html
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const productosRef = db.collection('productos');
+
+    // ==================================================
+    // LOGIN / LOGOUT
+    // ==================================================
+    const loginScreen = document.getElementById('loginScreen');
+    const appScreen = document.getElementById('appScreen');
+    const loginError = document.getElementById('loginError');
+
+    document.getElementById('loginBtn').addEventListener('click', () => {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        loginError.style.display = 'none';
+        if (!email || !password) return;
+        auth.signInWithEmailAndPassword(email, password)
+            .catch(err => {
+                loginError.textContent = 'Correo o contraseña incorrectos.';
+                loginError.style.display = 'block';
+            });
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut());
+
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            loginScreen.style.display = 'none';
+            appScreen.style.display = 'block';
+            document.getElementById('userEmailLabel').textContent = user.email;
+            loadProducts();
+        } else {
+            loginScreen.style.display = 'flex';
+            appScreen.style.display = 'none';
+        }
+    });
+
+    // ==================================================
+    // TOAST helper
+    // ==================================================
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    // ==================================================
+    // CARGA Y RENDER DE PRODUCTOS
+    // ==================================================
+    let allProducts = [];
+
+    function loadProducts() {
+        productosRef.orderBy('order', 'asc').onSnapshot(snapshot => {
+            allProducts = [];
+            snapshot.forEach(doc => allProducts.push({ id: doc.id, ...doc.data() }));
+            document.getElementById('migrateBox').style.display = allProducts.length === 0 ? 'block' : 'none';
+            renderList();
+        }, err => {
+            console.error(err);
+            showToast('Error leyendo productos: ' + err.message);
+        });
+    }
+
+    function imageUrlFor(p) {
+        if (p.imageSource === 'cloudinary' && p.imageValue) return p.imageValue;
+        if (p.imageValue) return IMAGE_BASE_URL + p.imageValue;
+        return 'https://via.placeholder.com/100x100?text=%20';
+    }
+
+    const CATEGORY_LABELS = {
+        tradicionales: 'Tradicionales', promociones: 'Promociones', especiales: 'Especiales',
+        antojitos: 'Antojitos', cochipaqs: 'CochiPaqs', aguas: 'Bebidas', extras: 'Extras'
+    };
+
+    function renderList() {
+        const search = document.getElementById('searchProd').value.trim().toLowerCase();
+        const filtered = allProducts.filter(p => !search || p.name.toLowerCase().includes(search));
+        document.getElementById('totalCount').textContent = allProducts.length;
+        document.getElementById('countInfo').textContent = search ? `${filtered.length} resultado(s)` : '';
+
+        const wrap = document.getElementById('productListWrap');
+        wrap.innerHTML = '';
+
+        // Agrupar por categoría, en el orden de CATEGORY_LABELS
+        Object.keys(CATEGORY_LABELS).forEach(cat => {
+            const items = filtered.filter(p => p.category === cat);
+            if (items.length === 0) return;
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'category-group';
+            groupDiv.innerHTML = `<h4>${CATEGORY_LABELS[cat]}</h4>`;
+            items.forEach(p => groupDiv.appendChild(renderProductRow(p)));
+            wrap.appendChild(groupDiv);
+        });
+
+        // Categorías no reconocidas (por si acaso)
+        const otros = filtered.filter(p => !CATEGORY_LABELS[p.category]);
+        if (otros.length) {
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'category-group';
+            groupDiv.innerHTML = `<h4>Otros</h4>`;
+            otros.forEach(p => groupDiv.appendChild(renderProductRow(p)));
+            wrap.appendChild(groupDiv);
+        }
+    }
+
+    function renderProductRow(p) {
+        const row = document.createElement('div');
+        row.className = 'product-item';
+        row.innerHTML = `
+            <img src="${imageUrlFor(p)}" onerror="this.src='https://via.placeholder.com/100x100?text=%20'">
+            <div class="info">
+                <div class="name ${p.active ? '' : 'inactive'}">${p.name}</div>
+                <div class="meta">MX$${Number(p.price).toFixed(2)}</div>
+            </div>
+            <div class="product-actions">
+                <label class="switch">
+                    <input type="checkbox" ${p.active ? 'checked' : ''} data-id="${p.id}" class="toggleActive">
+                    <span class="slider"></span>
+                </label>
+                <button class="icon-btn edit" data-id="${p.id}"><i class="fas fa-pen"></i></button>
+                <button class="icon-btn del" data-id="${p.id}"><i class="fas fa-trash"></i></button>
+            </div>
+        `;
+        row.querySelector('.toggleActive').addEventListener('change', (e) => {
+            productosRef.doc(p.id).update({ active: e.target.checked })
+                .then(() => showToast(e.target.checked ? 'Producto activado' : 'Producto desactivado'))
+                .catch(err => showToast('Error: ' + err.message));
+        });
+        row.querySelector('.edit').addEventListener('click', () => openEditModal(p));
+        row.querySelector('.del').addEventListener('click', () => deleteProduct(p));
+        return row;
+    }
+
+    document.getElementById('searchProd').addEventListener('input', renderList);
+
+    function deleteProduct(p) {
+        if (!confirm(`¿Eliminar "${p.name}"? Esta acción no se puede deshacer.`)) return;
+        productosRef.doc(p.id).delete()
+            .then(() => showToast('Producto eliminado'))
+            .catch(err => showToast('Error: ' + err.message));
+    }
+
+    // ==================================================
+    // MODAL agregar / editar
+    // ==================================================
+    const modal = document.getElementById('productModal');
+    let editingId = null;
+    let currentImageSource = 'github';
+
+    function resetForm() {
+        document.getElementById('f_name').value = '';
+        document.getElementById('f_price').value = '';
+        document.getElementById('f_category').value = 'tradicionales';
+        document.getElementById('f_desc').value = '';
+        document.getElementById('f_image_github').value = '';
+        document.getElementById('f_image_file').value = '';
+        document.getElementById('f_active').checked = true;
+        document.getElementById('imagePreview').style.display = 'none';
+        document.getElementById('uploadStatus').textContent = '';
+        setImageSource('github');
+    }
+
+    function setImageSource(src) {
+        currentImageSource = src;
+        document.getElementById('srcGithubBtn').classList.toggle('active-src', src === 'github');
+        document.getElementById('srcCloudinaryBtn').classList.toggle('active-src', src === 'cloudinary');
+        document.getElementById('f_image_github').style.display = src === 'github' ? 'block' : 'none';
+        document.getElementById('f_image_file').style.display = src === 'cloudinary' ? 'block' : 'none';
+    }
+    document.getElementById('srcGithubBtn').addEventListener('click', () => setImageSource('github'));
+    document.getElementById('srcCloudinaryBtn').addEventListener('click', () => setImageSource('cloudinary'));
+
+    let uploadedCloudinaryUrl = null;
+    document.getElementById('f_image_file').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const statusEl = document.getElementById('uploadStatus');
+        statusEl.textContent = 'Subiendo imagen...';
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+                method: 'POST', body: formData
+            });
+            const data = await res.json();
+            if (data.secure_url) {
+                uploadedCloudinaryUrl = data.secure_url;
+                statusEl.textContent = '✓ Imagen subida correctamente';
+                const preview = document.getElementById('imagePreview');
+                preview.src = data.secure_url;
+                preview.style.display = 'block';
+            } else {
+                statusEl.textContent = 'Error al subir: ' + (data.error?.message || 'desconocido');
+            }
+        } catch (err) {
+            statusEl.textContent = 'Error al subir: ' + err.message;
+        }
+    });
+
+    document.getElementById('openAddModalBtn').addEventListener('click', () => {
+        editingId = null;
+        uploadedCloudinaryUrl = null;
+        resetForm();
+        document.getElementById('modalTitle').textContent = 'Agregar producto';
+        modal.style.display = 'flex';
+    });
+
+    function openEditModal(p) {
+        editingId = p.id;
+        uploadedCloudinaryUrl = null;
+        resetForm();
+        document.getElementById('modalTitle').textContent = 'Editar producto';
+        document.getElementById('f_name').value = p.name;
+        document.getElementById('f_price').value = p.price;
+        document.getElementById('f_category').value = p.category;
+        document.getElementById('f_desc').value = p.desc || '';
+        document.getElementById('f_active').checked = !!p.active;
+        if (p.imageSource === 'cloudinary') {
+            setImageSource('cloudinary');
+            uploadedCloudinaryUrl = p.imageValue;
+            if (p.imageValue) {
+                const preview = document.getElementById('imagePreview');
+                preview.src = p.imageValue;
+                preview.style.display = 'block';
+            }
+        } else {
+            setImageSource('github');
+            document.getElementById('f_image_github').value = p.imageValue || '';
+        }
+        modal.style.display = 'flex';
+    }
+
+    document.getElementById('cancelModalBtn').addEventListener('click', () => modal.style.display = 'none');
+
+    document.getElementById('saveProductBtn').addEventListener('click', () => {
+        const name = document.getElementById('f_name').value.trim();
+        const price = parseFloat(document.getElementById('f_price').value);
+        const category = document.getElementById('f_category').value;
+        const desc = document.getElementById('f_desc').value.trim();
+        const active = document.getElementById('f_active').checked;
+
+        if (!name || isNaN(price)) {
+            showToast('Falta el nombre o el precio');
+            return;
+        }
+
+        let imageSource = currentImageSource;
+        let imageValue = '';
+        if (imageSource === 'github') {
+            imageValue = document.getElementById('f_image_github').value.trim();
+        } else {
+            imageValue = uploadedCloudinaryUrl || '';
+        }
+
+        const data = { name, price, category, desc, active, imageSource, imageValue };
+
+        if (editingId) {
+            productosRef.doc(editingId).update(data)
+                .then(() => { showToast('Producto actualizado'); modal.style.display = 'none'; })
+                .catch(err => showToast('Error: ' + err.message));
+        } else {
+            const maxOrder = allProducts.reduce((max, p) => Math.max(max, p.order || 0), 0);
+            data.order = maxOrder + 1;
+            data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            productosRef.add(data)
+                .then(() => { showToast('Producto agregado'); modal.style.display = 'none'; })
+                .catch(err => showToast('Error: ' + err.message));
+        }
+    });
+
+    // ==================================================
+    // MIGRACIÓN — carga los 51 productos originales una sola vez
+    // ==================================================
+    const ORIGINAL_PRODUCTS = [
+        { name: 'Taco de Cochinita Pibil', price: 33.00, category: 'tradicionales', desc: '(Blando, dorado o ahogado)', img: 'taco-cochinita.jpg' },
+        { name: 'Panucho', price: 35.00, category: 'tradicionales', desc: 'Cochinita pibil sobre una tortilla de maíz frita rellena de frijol refrito', img: 'panucho.jpg' },
+        { name: 'Torta de Cochinita Pibil', price: 50.00, category: 'tradicionales', desc: 'Pan levemente tostado, acompañado de una cama de frijol opcional y cochinita pibil', img: 'torta.jpg' },
+        { name: 'Gordita con Cochinita', price: 40.00, category: 'tradicionales', desc: 'Gordita de maíz frita rellena de cochinita pibil', img: 'gordita.jpg' },
+        { name: 'Costra de Queso Rellena', price: 65.00, category: 'tradicionales', desc: 'Costra de queso manchego y gouda, rellena de cochinita pibil', img: 'costra.jpg' },
+        { name: 'Burrito Pibil', price: 75.00, category: 'tradicionales', desc: 'Tortilla de harina de 30cm rellena de cochinita pibil, junto con frijoles refritos', img: 'burrito.jpg' },
+        { name: 'Manita Pibil', price: 70.00, category: 'tradicionales', desc: 'Manita de puerco acompañada de 4 tortillas sofritas, cebollitas y salsa habanero', img: 'manita.jpg' },
+        { name: 'Quesadilla Pibil', price: 45.00, category: 'tradicionales', desc: '', img: 'quesadilla.jpg' },
+
+        { name: 'Orden de Tacos (Blando, Dorado o Ahogado)', price: 90.00, category: 'promociones', desc: '3 tacos de cochinita pibil a elegir entre blando, dorado o ahogado, se acompañan de cebollitas curtidas con habanero y salsa', img: 'orden-tacos.jpg' },
+        { name: 'Orden de Panuchos', price: 100.00, category: 'promociones', desc: '3 panuchos de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa', img: 'orden-panuchos.jpg' },
+        { name: 'Burritos Cuates', price: 120.00, category: 'promociones', desc: '2 burritos de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa', img: 'burritos.jpg' },
+        { name: 'Dúo de Gorditas', price: 60.00, category: 'promociones', desc: '2 gorditas de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa', img: 'duo-gorditas.jpg' },
+        { name: 'Dúo de Tortas Pibil', price: 90.00, category: 'promociones', desc: '2 tortas de cochinita pibil, se acompañan de cebollitas curtidas con habanero y salsa', img: 'duo-tortas.jpg' },
+
+        { name: 'Paquete Especial', price: 420.00, category: 'cochipaqs', desc: '1 kilo de cochinita, 12 tostadas rellenas con frijol, tortillas, cebollitas y frijoles refritos', img: 'paquete-especial2.jpg' },
+        { name: 'Panuchero', price: 125.00, category: 'especiales', desc: '3 Panuchos + Bebida', img: 'panuchero.jpg' },
+        { name: 'Gordito', price: 115.00, category: 'especiales', desc: 'Torta + Gordita + Bebida', img: 'gordito.jpg' },
+        { name: 'Vaporcito', price: 80.00, category: 'especiales', desc: '2 Tamales + Bebida', img: 'vaporcito.jpg' },
+        { name: 'Super Oinc', price: 150.00, category: 'especiales', desc: 'Torta + Panucho + Gordita + Bebida', img: 'superoinc.jpg' },
+        { name: 'Superpib', price: 130.00, category: 'especiales', desc: 'Burrito + Panucho + Bebida', img: 'superpib.jpg' },
+        { name: 'Taquero', price: 120.00, category: 'especiales', desc: '3 Tacos + Bebida', img: 'taquero.jpg' },
+
+        { name: 'Manita a la Pibil Especial', price: 120.00, category: 'antojitos', desc: 'Manita a la pibil acompañada de cochinita y 3 tostadas rellenas de frijol refrito', img: 'manita-especial.jpg' },
+        { name: 'Costilla con Espinazo Pibil', price: 140.00, category: 'antojitos', desc: 'Costillitas con espinazo a la pibil acompañada de tostadas, tortillas sofritas y salsa habanera', img: 'costilla.jpg' },
+        { name: 'Vaporcitos', price: 30.00, category: 'antojitos', desc: '', img: 'vaporcitos.jpg' },
+        { name: 'Chamorro', price: 160.00, category: 'antojitos', desc: '', img: 'chamorro.jpg' },
+        { name: 'Molletes', price: 110.00, category: 'antojitos', desc: '', img: 'molletes.jpg' },
+        { name: 'Enchiladas', price: 120.00, category: 'antojitos', desc: '', img: 'enchiladas.jpg' },
+        { name: 'Enfrijoladas', price: 120.00, category: 'antojitos', desc: '', img: 'enfrijoladas.jpg' },
+        { name: 'Chilaquiles', price: 120.00, category: 'antojitos', desc: '', img: 'chilaquiles.jpg' },
+
+        { name: 'CochiPaq 1 (250gr)', price: 99.00, category: 'cochipaqs', desc: '1/4 de cochinita más 3 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos', img: 'paquete-especial.jpg' },
+        { name: 'CochiPaq 2 (500gr)', price: 199.00, category: 'cochipaqs', desc: '1/2 de cochinita más 6 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos', img: 'paquete-especial.jpg' },
+        { name: 'CochiPaq 3 (750gr)', price: 299.00, category: 'cochipaqs', desc: '3/4 de cochinita más 9 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos', img: 'paquete-especial.jpg' },
+        { name: 'CochiPaq 4 (1kg)', price: 399.00, category: 'cochipaqs', desc: '1 kilo de cochinita más 12 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos', img: 'paquete-especial.jpg' },
+        { name: 'CochiPaq 5 (1.5kg)', price: 590.00, category: 'cochipaqs', desc: '1.5 kilos de cochinita más 18 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos', img: 'paquete-especial.jpg' },
+        { name: 'CochiPaq 6 (2kg)', price: 790.00, category: 'cochipaqs', desc: '2 kilos de cochinita más 25 tostadas rellenas de frijol, cebollitas con y sin habanero, salsa y frijoles refritos', img: 'paquete-especial.jpg' },
+        { name: '500 gramos de Cochinita', price: 185.00, category: 'cochipaqs', desc: '500 gr de cochinita acompañados de cebollitas con y sin habanero, salsa habanera y frijoles refritos', img: 'cochinitangramos.jpg' },
+        { name: '750 gramos de Cochinita', price: 275.00, category: 'cochipaqs', desc: '750 gr de cochinita acompañados de cebollitas con y sin habanero, salsa habanera y frijoles refritos', img: 'cochinitangramos.jpg' },
+        { name: '1 kilo de Cochinita', price: 370.00, category: 'cochipaqs', desc: '1 kg de cochinita acompañados de cebollitas con y sin habanero, salsa habanera y frijoles refritos', img: 'cochinitangramos.jpg' },
+
+        { name: 'Agua de Jamaica', price: 30.00, category: 'aguas', desc: 'Agua de sabor natural de 1Lt', img: 'agua-jamaica.jpg' },
+        { name: 'Agua de Maracuyá', price: 30.00, category: 'aguas', desc: 'Agua de sabor natural de 1Lt', img: 'agua-maracuya.jpg' },
+        { name: 'Agua de Horchata', price: 30.00, category: 'aguas', desc: 'Agua de sabor natural de 1Lt', img: 'agua-horchata.jpg' },
+        { name: 'Agua de Limón con Menta', price: 30.00, category: 'aguas', desc: 'Agua de sabor natural de 1Lt', img: 'agua-limon.jpg' },
+        { name: 'Agua de Piña Colada', price: 30.00, category: 'aguas', desc: 'Agua sabor piña coco de 1Lt', img: 'agua-pina.jpg' },
+        { name: 'Agua de Frutos Rojos', price: 30.00, category: 'aguas', desc: 'Agua de sabor natural de 1Lt', img: 'aguadefrutosrojos.jpg' },
+        { name: 'Coca-Cola 500ml', price: 30.00, category: 'aguas', desc: '', img: 'cocacola500ml.jpg' },
+        { name: 'Coca-Cola PET 600ml', price: 45.00, category: 'aguas', desc: '', img: 'cocacolapet600ml.jpg' },
+        { name: 'Café Negro o Té', price: 20.00, category: 'aguas', desc: '', img: 'cafeote.jpg' },
+        { name: 'Jugo de Naranja', price: 30.00, category: 'aguas', desc: '', img: 'jugodenaranja.jpg' },
+        { name: 'Atole 500ml', price: 35.00, category: 'aguas', desc: '', img: 'atole500ml.jpg' },
+        { name: 'Atole por Litro', price: 60.00, category: 'aguas', desc: '', img: 'atoleporlitro.jpg' },
+
+        { name: 'Orden de Tostadas Panucheras', price: 50.00, category: 'extras', desc: '10 piezas de tostadas panucheras', img: 'tostadas-panucheras.jpg' },
+        { name: 'Tostadas Panucheras Adicionales', price: 10.00, category: 'extras', desc: '2 tostadas de maíz rellenas con frijol refrito', img: 'tostadas-extra.jpg' },
+        { name: 'Salsa Habanero', price: 25.00, category: 'extras', desc: '', img: 'salsa.jpg' },
+        { name: 'Cebollitas con Habanero', price: 25.00, category: 'extras', desc: 'Curtidas con naranja agria y orégano', img: 'cebollitasconabanero.jpg' },
+        { name: 'Cebollitas con Limón y Orégano', price: 25.00, category: 'extras', desc: '', img: 'cebollitassinabanero.jpg' },
+        { name: 'Frijoles Refritos', price: 30.00, category: 'extras', desc: '', img: 'frijoles.jpg' }
+    ];
+
+    document.getElementById('migrateBtn').addEventListener('click', async () => {
+        const btn = document.getElementById('migrateBtn');
+        btn.disabled = true;
+        btn.textContent = 'Migrando...';
+        try {
+            // Evita duplicados: solo agrega los que no existan ya por nombre
+            const existingNames = new Set(allProducts.map(p => p.name));
+            const batch = db.batch();
+            let count = 0;
+            ORIGINAL_PRODUCTS.forEach((item, index) => {
+                if (existingNames.has(item.name)) return;
+                const docRef = productosRef.doc();
+                batch.set(docRef, {
+                    name: item.name,
+                    price: item.price,
+                    category: item.category,
+                    desc: item.desc,
+                    imageSource: 'github',
+                    imageValue: item.img,
+                    active: true,
+                    order: index + 1,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                count++;
+            });
+            if (count === 0) {
+                showToast('Ya estaban migrados todos los productos');
+            } else {
+                await batch.commit();
+                showToast(`${count} productos migrados correctamente`);
+            }
+        } catch (err) {
+            showToast('Error migrando: ' + err.message);
+        }
+        btn.disabled = false;
+        btn.textContent = 'Migrar productos originales';
+    });
+</script>
+</body>
+</html>
