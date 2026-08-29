@@ -2396,7 +2396,7 @@
                 renderMenu(currentFilter);
             }, function(err) {
                 console.error('Error cargando el menú:', err);
-                menuGrid.innerHTML = '<p style="padding: 30px; text-align:center; color:#c0392b;">No se pudo cargar el menú. Intenta recargar la página.</p>';
+                menuGrid.innerHTML = '<p style="padding: 30px; text-align:center; color:#c0392b; word-break: break-word;">No se pudo cargar el menú.<br><br><b>Detalle técnico:</b><br>' + (err.message || err) + '</p>';
             });
 
         document.getElementById('img-taco').src = './seleccion%20de%20la%20mejor%20carne.jpg';
